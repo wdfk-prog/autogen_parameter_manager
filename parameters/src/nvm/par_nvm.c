@@ -116,13 +116,13 @@ typedef struct
 #define PAR_NVM_DBG_NAME_ARG(cfg_) (((const par_cfg_t *)(cfg_) != NULL) && (((const par_cfg_t *)(cfg_))->name != NULL) ? ((const par_cfg_t *)(cfg_))->name : "")
 #else
 #define PAR_NVM_DBG_NAME_ARG(cfg_) ""
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 
 #if (1 == PAR_CFG_ENABLE_ID)
 #define PAR_NVM_CFG_ID_VALUE(cfg_) (((const par_cfg_t *)(cfg_)) != NULL ? ((const par_cfg_t *)(cfg_))->id : 0U)
 #else
 #define PAR_NVM_CFG_ID_VALUE(cfg_) (0U)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 
 #if (1 == PAR_CFG_NVM_SCALAR_EN)
 /**
@@ -393,7 +393,7 @@ static par_status_t par_nvm_verify_record_readback(const uint32_t addr,
 
     return ePAR_OK;
 }
-#endif /* 1 == PAR_CFG_NVM_WRITE_VERIFY_EN */
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 /**
  * @brief Write parameter NVM header.
  *
@@ -442,7 +442,7 @@ static par_status_t par_nvm_write_header(const uint16_t num_of_par)
         PAR_ERR_PRINT("PAR_NVM: header readback verification failed, err=%u", (unsigned)status);
         return status;
     }
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 
     PAR_DBG_PRINT("PAR_NVM: writing header with obj_count=%d", num_of_par);
 
@@ -559,7 +559,7 @@ par_status_t par_nvm_print_nvm_lut(void)
     }
 #else
     status = ePAR_ERROR;
-#endif
+#endif /* (1 == PAR_CFG_DEBUG_EN) */
 
     return status;
 }
@@ -809,7 +809,7 @@ out:
             par_get_status_str(op_status),
             par_get_status_str(status));
     }
-#endif
+#endif /* (1 == PAR_CFG_DEBUG_EN) */
     return status;
 }
 /**
@@ -1298,7 +1298,7 @@ par_status_t par_nvm_write(const par_num_t par_num, const bool nvm_sync)
         {
             status |= par_nvm_sync_backend("after parameter write");
         }
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
     }
 
     return status;
@@ -1480,4 +1480,4 @@ par_status_t par_nvm_reset_all(void)
  * @} <!-- END GROUP -->
  */
 
-#endif /* 1 == PAR_CFG_NVM_EN */
+#endif /* (1 == PAR_CFG_NVM_EN) */

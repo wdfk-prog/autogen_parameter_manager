@@ -50,8 +50,7 @@
 #if defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION) || \
     defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION_SRC_ADDR)
 #error "Object persistence migration Kconfig is not supported; use fixed or dedicated placement!"
-#endif /* defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION) || \
-          defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION_SRC_ADDR) */
+#endif /* defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION) || defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION_SRC_ADDR) */
 
 /* Object persistence storage target/address options from Kconfig. */
 #if defined(AUTOGEN_PM_NVM_OBJECT_STORE_SHARED)
@@ -87,4 +86,4 @@
 /*          or PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY                                             */
 /*          or PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY                                           */
 
-#endif
+#endif /* !defined(_PAR_CFG_PORT_H_) */

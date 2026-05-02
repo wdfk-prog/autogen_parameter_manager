@@ -63,15 +63,33 @@ static par_storage_groups_t gs_par_default_mirror = { 0 };
 
 
 /**
- * @brief Typed live-value access pointers into grouped storage.
+ * @brief U8 live-value access pointer into grouped storage.
  */
 static par_atomic_u8_t * const gpu8_par_value = gs_par_storage.u8;
+/**
+ * @brief I8 live-value access pointer into grouped storage.
+ */
 static par_atomic_i8_t * const gpi8_par_value = (par_atomic_i8_t *)gs_par_storage.u8;
+/**
+ * @brief U16 live-value access pointer into grouped storage.
+ */
 static par_atomic_u16_t * const gpu16_par_value = gs_par_storage.u16;
+/**
+ * @brief I16 live-value access pointer into grouped storage.
+ */
 static par_atomic_i16_t * const gpi16_par_value = (par_atomic_i16_t *)gs_par_storage.u16;
+/**
+ * @brief U32 live-value access pointer into grouped storage.
+ */
 static par_atomic_u32_t * const gpu32_par_value = gs_par_storage.u32;
+/**
+ * @brief I32 live-value access pointer into grouped storage.
+ */
 static par_atomic_i32_t * const gpi32_par_value = (par_atomic_i32_t *)gs_par_storage.u32;
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
+/**
+ * @brief F32 live-value access pointer into grouped storage.
+ */
 static par_atomic_f32_t * const gpf32_par_value = (par_atomic_f32_t *)gs_par_storage.u32;
 #endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 

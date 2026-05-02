@@ -27,6 +27,7 @@
  */
 #include "par.h"
 #include "def/par_def.h"
+#include "def/par_id_map_static.h"
 /**
  * @brief Compile-time definitions.
  */
@@ -50,7 +51,7 @@
                                                          (((uint32_t)(access_) & (uint32_t)ePAR_ACCESS_READ) != 0U))
 #else
 #define PAR_CHECK_ACCESS_COMMON(enum_, access_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 
 #if (1 == PAR_CFG_NVM_SCALAR_EN)
 #define PAR_CHECK_SCALAR_PERSISTENCE(enum_, pers_)
@@ -73,12 +74,12 @@
 
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
 #define PAR_CHECK_F32(enum_, id_, name_, min_, max_, def_, unit_, access_, read_roles_, write_roles_, pers_, desc_) \
-    PAR_CHECK_SCALAR_PERSISTENCE(enum_, pers_);                                                                  \
+    PAR_CHECK_SCALAR_PERSISTENCE(enum_, pers_);                                                                     \
     PAR_CHECK_ACCESS_COMMON(enum_, access_)
 #else
 #define PAR_CHECK_F32(enum_, id_, name_, min_, max_, def_, unit_, access_, read_roles_, write_roles_, pers_, desc_) \
     PAR_STATIC_ASSERT(enum_##_f32_type_is_disabled__remove_PAR_ITEM_F32, 0)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
 #if (1 == PAR_CFG_NVM_OBJECT_EN)
@@ -281,7 +282,7 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 
 #undef PAR_CHECK_ID_DUPLICATE_CASE
 #undef PAR_CHECK_ID_BUCKET_CASE
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
  * @brief Module-scope variables.
  */
@@ -314,13 +315,13 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #define PAR_INIT_ID(id_) .id = (uint16_t)(id_),
 #else
 #define PAR_INIT_ID(id_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 
 #if (1 == PAR_CFG_ENABLE_NAME)
 #define PAR_INIT_NAME(name_) .name = (name_),
 #else
 #define PAR_INIT_NAME(name_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 
 #if (1 == PAR_CFG_ENABLE_RANGE)
 #define PAR_INIT_RANGE_U8(min_, max_)  .value_cfg.scalar.range.min.u8 = (uint8_t)(min_), .value_cfg.scalar.range.max.u8 = (uint8_t)(max_),
@@ -338,7 +339,7 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #define PAR_INIT_RANGE_I16(min_, max_)
 #define PAR_INIT_RANGE_I32(min_, max_)
 #define PAR_INIT_RANGE_F32(min_, max_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 
 #define PAR_INIT_SCALAR_DEF(field_, def_) .value_cfg.scalar.def.field_ = (def_),
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
@@ -350,13 +351,13 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #define PAR_INIT_UNIT(unit_) .unit = (unit_),
 #else
 #define PAR_INIT_UNIT(unit_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_UNIT) */
 
 #if (1 == PAR_CFG_ENABLE_ACCESS)
 #define PAR_INIT_ACCESS(access_) .access = (access_),
 #else
 #define PAR_INIT_ACCESS(access_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
 #define PAR_INIT_READ_ROLES(read_roles_)   .read_roles = (read_roles_),
@@ -364,7 +365,7 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #else
 #define PAR_INIT_READ_ROLES(read_roles_)
 #define PAR_INIT_WRITE_ROLES(write_roles_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 
 #if (1 == PAR_CFG_NVM_EN)
 /**
@@ -403,7 +404,7 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #define PAR_INIT_DESC(desc_) .desc = (desc_),
 #else
 #define PAR_INIT_DESC(desc_)
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 
 #define PAR_INIT_SCALAR_ITEM(enum_, id_, name_, type_, range_init_, def_field_, def_value_, unit_, access_, read_roles_, write_roles_, pers_, desc_) \
     [enum_] = {                                                                                                                                      \
@@ -466,6 +467,9 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
 #include "../detail/par_object_item_bind_typed.inc"
 
+/**
+ * @brief Compile-time parameter metadata table generated from par_table.def.
+ */
 static const par_cfg_t g_par_table[ePAR_NUM_OF] = {
 #include "../../par_table.def"
 };

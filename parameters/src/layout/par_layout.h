@@ -25,7 +25,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* defined(__cplusplus) */
 /**
  * @brief Aggregated storage counts for one active layout source.
  */
@@ -66,7 +66,7 @@ PAR_STATIC_ASSERT(par_layout_static_obj_pool_bytes_matches_table, (PAR_STORAGE_O
 #endif /* (PAR_LAYOUT_COMPILE_COUNTOBJ > 0u) */
 #else
 #error "Unsupported PAR_CFG_LAYOUT_SOURCE value!"
-#endif
+#endif /* (PAR_CFG_LAYOUT_SOURCE == PAR_CFG_LAYOUT_COMPILE_SCAN) */
 
 #define PAR_STORAGE_NONZERO(count_) (((count_) > 0u) ? (count_) : 1u)
 /**
@@ -98,6 +98,6 @@ void par_layout_init(void);
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* defined(__cplusplus) */
 
-#endif /* _PAR_LAYOUT_H_ */
+#endif /* !defined(_PAR_LAYOUT_H_) */

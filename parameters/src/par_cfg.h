@@ -70,8 +70,8 @@
 #ifndef DEBUG
 #undef PAR_CFG_DEBUG_EN
 #define PAR_CFG_DEBUG_EN (0)
-#endif
-#endif
+#endif /* !defined(DEBUG) */
+#endif /* !defined(PAR_CFG_DEBUG_EN) */
 
 /**
  * @brief Enable PAR_ASSERT checks.
@@ -84,8 +84,8 @@
 #ifndef DEBUG
 #undef PAR_CFG_ASSERT_EN
 #define PAR_CFG_ASSERT_EN (0)
-#endif
-#endif
+#endif /* !defined(DEBUG) */
+#endif /* !defined(PAR_CFG_ASSERT_EN) */
 
 /**
  * @brief Platform hook fallbacks.
@@ -96,39 +96,39 @@
     {                      \
         (void)(x);         \
     } while (0)
-#endif
+#endif /* !defined(PAR_PORT_ASSERT) */
 
 #ifndef PAR_PORT_LOG_INFO
 #define PAR_PORT_LOG_INFO(...) \
     do                         \
     {                          \
     } while (0)
-#endif
+#endif /* !defined(PAR_PORT_LOG_INFO) */
 
 #ifndef PAR_PORT_LOG_DEBUG
 #define PAR_PORT_LOG_DEBUG(...) \
     do                          \
     {                           \
     } while (0)
-#endif
+#endif /* !defined(PAR_PORT_LOG_DEBUG) */
 
 #ifndef PAR_PORT_LOG_WARN
 #define PAR_PORT_LOG_WARN(...) \
     do                         \
     {                          \
     } while (0)
-#endif
+#endif /* !defined(PAR_PORT_LOG_WARN) */
 
 #ifndef PAR_PORT_LOG_ERROR
 #define PAR_PORT_LOG_ERROR(...) \
     do                          \
     {                           \
     } while (0)
-#endif
+#endif /* !defined(PAR_PORT_LOG_ERROR) */
 
 #ifndef PAR_PORT_STATIC_ASSERT
 #define PAR_PORT_STATIC_ASSERT(name, expn) typedef char _static_assert_##name[(expn) ? 1 : -1]
-#endif
+#endif /* !defined(PAR_PORT_STATIC_ASSERT) */
 
 /**
  * @brief Platform weak symbol macro.
@@ -137,7 +137,7 @@
  */
 #ifndef PAR_PORT_WEAK
 #define PAR_PORT_WEAK __attribute__((weak))
-#endif
+#endif /* !defined(PAR_PORT_WEAK) */
 
 /**
  * @brief Type alignment abstraction.
@@ -153,8 +153,8 @@
 #define PAR_ALIGNOF(type) _Alignof(type)
 #else
 #define PAR_ALIGNOF(type) offsetof(struct { char _par_align_c; type _par_align_t; }, _par_align_t)
-#endif
-#endif
+#endif /* defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L) */
+#endif /* !defined(PAR_ALIGNOF) */
 
 /**
  * @brief Package compile-time assert.
@@ -169,7 +169,7 @@
 #define PAR_CFG_USE_PORT_HOOKS (1)
 #else
 #define PAR_CFG_USE_PORT_HOOKS (0)
-#endif
+#endif /* !defined(PAR_CFG_PORT_HOOK_EN) */
 
 /**
  * @brief Debug communication port macros.
@@ -178,19 +178,19 @@
 #if (1 == PAR_CFG_DEBUG_EN)
 #ifndef PAR_CFG_DIRECT_LOG
 #define PAR_CFG_DIRECT_LOG(...) (cli_printf((char *)__VA_ARGS__))
-#endif
+#endif /* !defined(PAR_CFG_DIRECT_LOG) */
 #ifndef PAR_CFG_DIRECT_INFO_LOG
 #define PAR_CFG_DIRECT_INFO_LOG(...) PAR_CFG_DIRECT_LOG(__VA_ARGS__)
-#endif
+#endif /* !defined(PAR_CFG_DIRECT_INFO_LOG) */
 #ifndef PAR_CFG_DIRECT_DEBUG_LOG
 #define PAR_CFG_DIRECT_DEBUG_LOG(...) PAR_CFG_DIRECT_LOG(__VA_ARGS__)
-#endif
+#endif /* !defined(PAR_CFG_DIRECT_DEBUG_LOG) */
 #ifndef PAR_CFG_DIRECT_WARN_LOG
 #define PAR_CFG_DIRECT_WARN_LOG(...) PAR_CFG_DIRECT_LOG(__VA_ARGS__)
-#endif
+#endif /* !defined(PAR_CFG_DIRECT_WARN_LOG) */
 #ifndef PAR_CFG_DIRECT_ERROR_LOG
 #define PAR_CFG_DIRECT_ERROR_LOG(...) PAR_CFG_DIRECT_LOG(__VA_ARGS__)
-#endif
+#endif /* !defined(PAR_CFG_DIRECT_ERROR_LOG) */
 #define PAR_INFO_PRINT(...) PAR_CFG_DIRECT_INFO_LOG(__VA_ARGS__)
 #define PAR_DBG_PRINT(...)  PAR_CFG_DIRECT_DEBUG_LOG(__VA_ARGS__)
 #define PAR_WARN_PRINT(...) PAR_CFG_DIRECT_WARN_LOG(__VA_ARGS__)
@@ -212,7 +212,7 @@
     {                      \
         ;                  \
     }
-#endif
+#endif /* (1 == PAR_CFG_DEBUG_EN) */
 #else
 #if (1 == PAR_CFG_DEBUG_EN)
 #define PAR_INFO_PRINT(...) PAR_PORT_LOG_INFO(__VA_ARGS__)
@@ -236,8 +236,8 @@
     {                      \
         ;                  \
     }
-#endif
-#endif
+#endif /* (1 == PAR_CFG_DEBUG_EN) */
+#endif /* (0 == PAR_CFG_USE_PORT_HOOKS) */
 
 /**
  * @brief Assertion macros.
@@ -253,15 +253,15 @@
     {                            \
         (void)(x);               \
     } while (0)
-#endif
-#endif
+#endif /* defined(PROJ_CFG_ASSERT) */
+#endif /* !defined(PAR_CFG_DIRECT_ASSERT) */
 #define PAR_ASSERT(x) PAR_CFG_DIRECT_ASSERT(x)
 #else
 #define PAR_ASSERT(x) \
     {                 \
         ;             \
     }
-#endif
+#endif /* (1 == PAR_CFG_ASSERT_EN) */
 #else
 #if (1 == PAR_CFG_ASSERT_EN)
 #define PAR_ASSERT(x) PAR_PORT_ASSERT(x)
@@ -270,8 +270,8 @@
     {                 \
         ;             \
     }
-#endif
-#endif
+#endif /* (1 == PAR_CFG_ASSERT_EN) */
+#endif /* (0 == PAR_CFG_USE_PORT_HOOKS) */
 
 #undef PAR_CFG_USE_PORT_HOOKS
 
@@ -282,7 +282,7 @@
  */
 #if (0 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_TABLE_ID_CHECK_EN)
 #error "Parameter settings invalid: Disable table ID checking (PAR_CFG_TABLE_ID_CHECK_EN)!"
-#endif
+#endif /* (0 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_TABLE_ID_CHECK_EN) */
 
 /**
  * @brief Enable parameter access serialization through mutex hooks.
@@ -293,7 +293,7 @@
  */
 #ifndef PAR_CFG_MUTEX_EN
 #define PAR_CFG_MUTEX_EN (1)
-#endif
+#endif /* !defined(PAR_CFG_MUTEX_EN) */
 
 /**
  * @brief Configure parameter mutex wait timeout.
@@ -303,7 +303,7 @@
  */
 #ifndef PAR_CFG_MUTEX_TIMEOUT_MS
 #define PAR_CFG_MUTEX_TIMEOUT_MS (10)
-#endif
+#endif /* !defined(PAR_CFG_MUTEX_TIMEOUT_MS) */
 
 /**
  * @brief Select the platform-specific par_if backend.
@@ -313,7 +313,7 @@
  */
 #ifndef PAR_CFG_IF_PORT_EN
 #define PAR_CFG_IF_PORT_EN (0)
-#endif
+#endif /* !defined(PAR_CFG_IF_PORT_EN) */
 
 /**
  * @brief Route logs and assertions through platform hooks.
@@ -323,7 +323,7 @@
  */
 #ifndef PAR_CFG_PORT_HOOK_EN
 #define PAR_CFG_PORT_HOOK_EN (0)
-#endif
+#endif /* !defined(PAR_CFG_PORT_HOOK_EN) */
 
 /**
  * @brief Parameter storage layout-source constants.
@@ -343,7 +343,7 @@
  */
 #ifndef PAR_CFG_LAYOUT_SOURCE
 #define PAR_CFG_LAYOUT_SOURCE PAR_CFG_LAYOUT_COMPILE_SCAN
-#endif
+#endif /* !defined(PAR_CFG_LAYOUT_SOURCE) */
 
 /**
  * @brief Static layout include path.
@@ -352,7 +352,7 @@
  */
 #ifndef PAR_CFG_LAYOUT_STATIC_INCLUDE
 #define PAR_CFG_LAYOUT_STATIC_INCLUDE "par_layout_static.h"
-#endif
+#endif /* !defined(PAR_CFG_LAYOUT_STATIC_INCLUDE) */
 
 /**
  * @brief Enable floating-point scalar parameter support.
@@ -362,7 +362,7 @@
  */
 #ifndef PAR_CFG_ENABLE_TYPE_F32
 #define PAR_CFG_ENABLE_TYPE_F32 (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_TYPE_F32) */
 
 /**
  * @brief Enable fixed-capacity string object parameter support.
@@ -375,8 +375,8 @@
 #define PAR_CFG_ENABLE_TYPE_STR (PAR_CFG_OBJECT_TYPES_ENABLED)
 #else
 #define PAR_CFG_ENABLE_TYPE_STR (1)
-#endif /* PAR_CFG_OBJECT_TYPES_ENABLED */
-#endif /* PAR_CFG_ENABLE_TYPE_STR */
+#endif /* defined(PAR_CFG_OBJECT_TYPES_ENABLED) */
+#endif /* !defined(PAR_CFG_ENABLE_TYPE_STR) */
 /**
  * @brief Enable raw byte object parameter support.
  *
@@ -388,8 +388,8 @@
 #define PAR_CFG_ENABLE_TYPE_BYTES (PAR_CFG_OBJECT_TYPES_ENABLED)
 #else
 #define PAR_CFG_ENABLE_TYPE_BYTES (1)
-#endif /* PAR_CFG_OBJECT_TYPES_ENABLED */
-#endif /* PAR_CFG_ENABLE_TYPE_BYTES */
+#endif /* defined(PAR_CFG_OBJECT_TYPES_ENABLED) */
+#endif /* !defined(PAR_CFG_ENABLE_TYPE_BYTES) */
 /**
  * @brief Enable uint8_t array object parameter support.
  *
@@ -401,8 +401,8 @@
 #define PAR_CFG_ENABLE_TYPE_ARR_U8 (PAR_CFG_OBJECT_TYPES_ENABLED)
 #else
 #define PAR_CFG_ENABLE_TYPE_ARR_U8 (1)
-#endif /* PAR_CFG_OBJECT_TYPES_ENABLED */
-#endif /* PAR_CFG_ENABLE_TYPE_ARR_U8 */
+#endif /* defined(PAR_CFG_OBJECT_TYPES_ENABLED) */
+#endif /* !defined(PAR_CFG_ENABLE_TYPE_ARR_U8) */
 /**
  * @brief Enable uint16_t array object parameter support.
  *
@@ -414,8 +414,8 @@
 #define PAR_CFG_ENABLE_TYPE_ARR_U16 (PAR_CFG_OBJECT_TYPES_ENABLED)
 #else
 #define PAR_CFG_ENABLE_TYPE_ARR_U16 (1)
-#endif /* PAR_CFG_OBJECT_TYPES_ENABLED */
-#endif /* PAR_CFG_ENABLE_TYPE_ARR_U16 */
+#endif /* defined(PAR_CFG_OBJECT_TYPES_ENABLED) */
+#endif /* !defined(PAR_CFG_ENABLE_TYPE_ARR_U16) */
 /**
  * @brief Enable uint32_t array object parameter support.
  *
@@ -427,8 +427,8 @@
 #define PAR_CFG_ENABLE_TYPE_ARR_U32 (PAR_CFG_OBJECT_TYPES_ENABLED)
 #else
 #define PAR_CFG_ENABLE_TYPE_ARR_U32 (1)
-#endif /* PAR_CFG_OBJECT_TYPES_ENABLED */
-#endif /* PAR_CFG_ENABLE_TYPE_ARR_U32 */
+#endif /* defined(PAR_CFG_OBJECT_TYPES_ENABLED) */
+#endif /* !defined(PAR_CFG_ENABLE_TYPE_ARR_U32) */
 /**
  * @brief Enable the shared object-parameter framework.
  *
@@ -442,8 +442,8 @@
 #define PAR_CFG_OBJECT_TYPES_ENABLED (1)
 #else
 #define PAR_CFG_OBJECT_TYPES_ENABLED (0)
-#endif /* object type switches */
-#endif /* PAR_CFG_OBJECT_TYPES_ENABLED */
+#endif /* ((1 == PAR_CFG_ENABLE_TYPE_STR) || (1 == PAR_CFG_ENABLE_TYPE_BYTES) || (1 == PAR_CFG_ENABLE_TYPE_ARR_U8) || (1 == PAR_CFG_ENABLE_TYPE_ARR_U16) || (1 == PAR_CFG_ENABLE_TYPE_ARR_U32)) */
+#endif /* !defined(PAR_CFG_OBJECT_TYPES_ENABLED) */
 
 /**
  * @brief True when at least one object parameter type is enabled.
@@ -464,14 +464,14 @@ PAR_STATIC_ASSERT(par_cfg_object_types_enabled_matches_type_switches,
  */
 #ifndef PAR_CFG_ENABLE_RUNTIME_VALIDATION
 #define PAR_CFG_ENABLE_RUNTIME_VALIDATION (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 
 /**
  * @brief Enable/Disable on-change callbacks in normal setters.
  */
 #ifndef PAR_CFG_ENABLE_CHANGE_CALLBACK
 #define PAR_CFG_ENABLE_CHANGE_CALLBACK (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_CHANGE_CALLBACK) */
 
 /**
  * @brief Enable/Disable raw reset-all API and default mirror storage.
@@ -489,133 +489,59 @@ PAR_STATIC_ASSERT(par_cfg_object_types_enabled_matches_type_switches,
  */
 #ifndef PAR_CFG_ENABLE_RESET_ALL_RAW
 #define PAR_CFG_ENABLE_RESET_ALL_RAW (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_RESET_ALL_RAW) */
 
 /**
  * @brief Enable/Disable parameter range metadata (min/max).
  */
 #ifndef PAR_CFG_ENABLE_RANGE
 #define PAR_CFG_ENABLE_RANGE (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_RANGE) */
 
 /**
  * @brief Enable/Disable parameter name metadata.
  */
 #ifndef PAR_CFG_ENABLE_NAME
 #define PAR_CFG_ENABLE_NAME (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_NAME) */
 
 /**
  * @brief Enable/Disable parameter unit metadata.
  */
 #ifndef PAR_CFG_ENABLE_UNIT
 #define PAR_CFG_ENABLE_UNIT (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_UNIT) */
 
 /**
  * @brief Enable/Disable parameter description metadata.
  */
 #ifndef PAR_CFG_ENABLE_DESC
 #define PAR_CFG_ENABLE_DESC (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_DESC) */
 
 /**
  * @brief Enable/Disable parameter ID metadata.
  */
 #ifndef PAR_CFG_ENABLE_ID
 #define PAR_CFG_ENABLE_ID (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_ID) */
 
 #include "def/par_def.h"
 
-#if (1 == PAR_CFG_ENABLE_ID)
-/**
- * @brief Enable/Disable optional runtime duplicate-ID diagnostic scan.
- *
- * @note Static ID-map generation and compile-time duplicate-ID checking remain.
- * enabled by default whenever PAR_CFG_ENABLE_ID = 1.
- */
-#ifndef PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK
-#define PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK (0)
-#endif
-
-/**
- * @brief Enable/Disable optional runtime ID hash-collision diagnostic scan.
- *
- * @note Static ID-map generation and compile-time hash collision checking.
- * remain enabled by default whenever PAR_CFG_ENABLE_ID = 1.
- */
-#ifndef PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK
-#define PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK (0)
-#endif
-
-/**
- * @brief Internal-only ID hash geometry helpers.
- *
- * @note Shared by the compile-time table checks, compile-time static ID-map.
- * generation, and optional runtime diagnostic scans.
- *
- * @note These helpers define the internal geometry of the core ID lookup map.
- * Integrators should not treat them as a stable public extension API.
- */
-#ifndef PAR_ID_HASH_GOLDEN_RATIO_32
-#define PAR_ID_HASH_GOLDEN_RATIO_32 (0x61C88647u)
-#endif
-
-#ifndef PAR_ID_HASH_MIN_BUCKETS
-#define PAR_ID_HASH_MIN_BUCKETS ((uint32_t)(2u * (uint32_t)ePAR_NUM_OF))
-#endif
-
-#ifndef PAR_ID_HASH_BITS_FROM_MIN_BUCKETS
-#define PAR_ID_HASH_BITS_FROM_MIN_BUCKETS(min_buckets_)                       \
-    (((min_buckets_) <= (1u << 1)) ? 1u : ((min_buckets_) <= (1u << 2)) ? 2u  \
-                                      : ((min_buckets_) <= (1u << 3))   ? 3u  \
-                                      : ((min_buckets_) <= (1u << 4))   ? 4u  \
-                                      : ((min_buckets_) <= (1u << 5))   ? 5u  \
-                                      : ((min_buckets_) <= (1u << 6))   ? 6u  \
-                                      : ((min_buckets_) <= (1u << 7))   ? 7u  \
-                                      : ((min_buckets_) <= (1u << 8))   ? 8u  \
-                                      : ((min_buckets_) <= (1u << 9))   ? 9u  \
-                                      : ((min_buckets_) <= (1u << 10))  ? 10u \
-                                      : ((min_buckets_) <= (1u << 11))  ? 11u \
-                                      : ((min_buckets_) <= (1u << 12))  ? 12u \
-                                      : ((min_buckets_) <= (1u << 13))  ? 13u \
-                                      : ((min_buckets_) <= (1u << 14))  ? 14u \
-                                      : ((min_buckets_) <= (1u << 15))  ? 15u \
-                                      : ((min_buckets_) <= (1u << 16))  ? 16u \
-                                      : ((min_buckets_) <= (1u << 17))  ? 17u \
-                                                                        : 18u)
-#endif
-
-#ifndef PAR_ID_HASH_BITS
-#define PAR_ID_HASH_BITS PAR_ID_HASH_BITS_FROM_MIN_BUCKETS(PAR_ID_HASH_MIN_BUCKETS)
-#endif
-
-#ifndef PAR_ID_HASH_SIZE
-#define PAR_ID_HASH_SIZE (1u << PAR_ID_HASH_BITS)
-#endif
-
-#ifndef PAR_HASH_ID_CONST
-#define PAR_HASH_ID_CONST(id_) ((((uint32_t)(id_)) * PAR_ID_HASH_GOLDEN_RATIO_32) >> (32u - PAR_ID_HASH_BITS))
-#endif
-
-PAR_STATIC_ASSERT(par_id_hash_size_valid, (PAR_ID_HASH_SIZE >= PAR_ID_HASH_MIN_BUCKETS));
-PAR_STATIC_ASSERT(par_id_hash_bits_valid, ((PAR_ID_HASH_BITS > 0u) && (PAR_ID_HASH_BITS < 32u)));
-#endif
 
 /**
  * @brief Enable/Disable parameter access metadata.
  */
 #ifndef PAR_CFG_ENABLE_ACCESS
 #define PAR_CFG_ENABLE_ACCESS (1)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_ACCESS) */
 
 /**
  * @brief Enable/Disable optional external role-policy metadata and enforcement.
  */
 #ifndef PAR_CFG_ENABLE_ROLE_POLICY
 #define PAR_CFG_ENABLE_ROLE_POLICY (0)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_ROLE_POLICY) */
 
 /**
  * @brief Enable/Disable description check.
@@ -624,30 +550,24 @@ PAR_STATIC_ASSERT(par_id_hash_bits_valid, ((PAR_ID_HASH_BITS > 0u) && (PAR_ID_HA
  */
 #ifndef PAR_CFG_ENABLE_DESC_CHECK
 #define PAR_CFG_ENABLE_DESC_CHECK (PAR_CFG_ENABLE_DESC)
-#endif
+#endif /* !defined(PAR_CFG_ENABLE_DESC_CHECK) */
 
 /**
  * @brief Configuration dependency checks for optional fields/features.
  */
-#if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) && \
+#if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) &&                       \
     (0 == PAR_CFG_ENABLE_ID) &&                                                    \
     (PAR_CFG_NVM_RECORD_LAYOUT != PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY) && \
     (PAR_CFG_NVM_RECORD_LAYOUT != PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY)
 #error "Parameter settings invalid: selected NVM layout requires PAR_CFG_ENABLE_ID = 1!"
-#endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) && \
-          (0 == PAR_CFG_ENABLE_ID) && \
-          (PAR_CFG_NVM_RECORD_LAYOUT != PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY) && \
-          (PAR_CFG_NVM_RECORD_LAYOUT != PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY) */
+#endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) && (0 == PAR_CFG_ENABLE_ID) && (PAR_CFG_NVM_RECORD_LAYOUT != PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY) && (PAR_CFG_NVM_RECORD_LAYOUT != PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY) */
 
-#if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) &&                         \
+#if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) &&                           \
     ((PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY) ||    \
      (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY)) && \
     (0 == PAR_CFG_TABLE_ID_CHECK_EN)
 #error "Parameter settings invalid: payload-only NVM layouts require PAR_CFG_TABLE_ID_CHECK_EN = 1!"
-#endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) && \
-          ((PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY) || \
-           (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY)) && \
-          (0 == PAR_CFG_TABLE_ID_CHECK_EN) */
+#endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_SCALAR_EN) && ((PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY) || (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY)) && (0 == PAR_CFG_TABLE_ID_CHECK_EN) */
 
 #if (1 == PAR_CFG_NVM_SCALAR_EN) && (0 == PAR_CFG_NVM_EN)
 #error "Parameter settings invalid: scalar persistence requires PAR_CFG_NVM_EN = 1!"
@@ -656,8 +576,7 @@ PAR_STATIC_ASSERT(par_id_hash_bits_valid, ((PAR_ID_HASH_BITS > 0u) && (PAR_ID_HA
 #if (1 == PAR_CFG_NVM_EN) && (0 == PAR_CFG_NVM_SCALAR_EN) && \
     (0 == PAR_CFG_NVM_OBJECT_EN)
 #error "Parameter settings invalid: NVM requires scalar or object persistence to be enabled!"
-#endif /* (1 == PAR_CFG_NVM_EN) && (0 == PAR_CFG_NVM_SCALAR_EN) && \
-          (0 == PAR_CFG_NVM_OBJECT_EN) */
+#endif /* (1 == PAR_CFG_NVM_EN) && (0 == PAR_CFG_NVM_SCALAR_EN) && (0 == PAR_CFG_NVM_OBJECT_EN) */
 
 #if (1 == PAR_CFG_NVM_OBJECT_EN) && (0 == PAR_CFG_NVM_EN)
 #error "Parameter settings invalid: object persistence requires PAR_CFG_NVM_EN = 1!"
@@ -682,48 +601,39 @@ PAR_STATIC_ASSERT(par_id_hash_bits_valid, ((PAR_ID_HASH_BITS > 0u) && (PAR_ID_HA
 #if defined(PAR_CFG_NVM_OBJECT_MIGRATION_EN) || \
     defined(PAR_CFG_NVM_OBJECT_MIGRATION_SRC_ADDR)
 #error "Object persistence migration is not supported; use fixed or dedicated placement!"
-#endif /* defined(PAR_CFG_NVM_OBJECT_MIGRATION_EN) || \
-          defined(PAR_CFG_NVM_OBJECT_MIGRATION_SRC_ADDR) */
+#endif /* defined(PAR_CFG_NVM_OBJECT_MIGRATION_EN) || defined(PAR_CFG_NVM_OBJECT_MIGRATION_SRC_ADDR) */
 
-#if (1 == PAR_CFG_NVM_OBJECT_EN) && \
+#if (1 == PAR_CFG_NVM_OBJECT_EN) &&                                       \
     (PAR_CFG_NVM_OBJECT_STORE_MODE != PAR_CFG_NVM_OBJECT_STORE_SHARED) && \
     (PAR_CFG_NVM_OBJECT_STORE_MODE != PAR_CFG_NVM_OBJECT_STORE_DEDICATED)
 #error "Parameter settings invalid: PAR_CFG_NVM_OBJECT_STORE_MODE must be SHARED or DEDICATED!"
-#endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && \
-          (PAR_CFG_NVM_OBJECT_STORE_MODE != PAR_CFG_NVM_OBJECT_STORE_SHARED) && \
-          (PAR_CFG_NVM_OBJECT_STORE_MODE != PAR_CFG_NVM_OBJECT_STORE_DEDICATED) */
+#endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (PAR_CFG_NVM_OBJECT_STORE_MODE != PAR_CFG_NVM_OBJECT_STORE_SHARED) && (PAR_CFG_NVM_OBJECT_STORE_MODE != PAR_CFG_NVM_OBJECT_STORE_DEDICATED) */
 
-#if (1 == PAR_CFG_NVM_OBJECT_EN) && \
-    (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) && \
+#if (1 == PAR_CFG_NVM_OBJECT_EN) &&                                           \
+    (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) &&     \
     (PAR_CFG_NVM_OBJECT_ADDR_MODE != PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR) && \
     (PAR_CFG_NVM_OBJECT_ADDR_MODE != PAR_CFG_NVM_OBJECT_ADDR_FIXED)
 #error "Parameter settings invalid: PAR_CFG_NVM_OBJECT_ADDR_MODE must be AFTER_SCALAR or FIXED!"
-#endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && \
-          (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) && \
-          (PAR_CFG_NVM_OBJECT_ADDR_MODE != PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR) && \
-          (PAR_CFG_NVM_OBJECT_ADDR_MODE != PAR_CFG_NVM_OBJECT_ADDR_FIXED) */
+#endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) && (PAR_CFG_NVM_OBJECT_ADDR_MODE != PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR) && (PAR_CFG_NVM_OBJECT_ADDR_MODE != PAR_CFG_NVM_OBJECT_ADDR_FIXED) */
 
-#if (1 == PAR_CFG_NVM_OBJECT_EN) && \
+#if (1 == PAR_CFG_NVM_OBJECT_EN) &&                                       \
     (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) && \
-    (PAR_CFG_NVM_OBJECT_ADDR_MODE == PAR_CFG_NVM_OBJECT_ADDR_FIXED) && \
+    (PAR_CFG_NVM_OBJECT_ADDR_MODE == PAR_CFG_NVM_OBJECT_ADDR_FIXED) &&    \
     (0U == PAR_CFG_NVM_OBJECT_FIXED_ADDR)
 #error "Parameter settings invalid: fixed object persistence mode requires PAR_CFG_NVM_OBJECT_FIXED_ADDR != 0!"
-#endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && \
-          (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) && \
-          (PAR_CFG_NVM_OBJECT_ADDR_MODE == PAR_CFG_NVM_OBJECT_ADDR_FIXED) && \
-          (0U == PAR_CFG_NVM_OBJECT_FIXED_ADDR) */
+#endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_SHARED) && (PAR_CFG_NVM_OBJECT_ADDR_MODE == PAR_CFG_NVM_OBJECT_ADDR_FIXED) && (0U == PAR_CFG_NVM_OBJECT_FIXED_ADDR) */
 
 #if (0 == PAR_CFG_ENABLE_ID) && (1 == PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK)
 #error "Parameter settings invalid: runtime duplicate-ID diagnostics require PAR_CFG_ENABLE_ID = 1!"
-#endif
+#endif /* (0 == PAR_CFG_ENABLE_ID) && (1 == PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK) */
 
 #if (0 == PAR_CFG_ENABLE_ID) && (1 == PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK)
 #error "Parameter settings invalid: runtime ID hash-collision diagnostics require PAR_CFG_ENABLE_ID = 1!"
-#endif
+#endif /* (0 == PAR_CFG_ENABLE_ID) && (1 == PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK) */
 
 #if (PAR_CFG_LAYOUT_SOURCE != PAR_CFG_LAYOUT_COMPILE_SCAN) && (PAR_CFG_LAYOUT_SOURCE != PAR_CFG_LAYOUT_SCRIPT)
 #error "Parameter settings invalid: PAR_CFG_LAYOUT_SOURCE must be PAR_CFG_LAYOUT_COMPILE_SCAN or PAR_CFG_LAYOUT_SCRIPT!"
-#endif
+#endif /* (PAR_CFG_LAYOUT_SOURCE != PAR_CFG_LAYOUT_COMPILE_SCAN) && (PAR_CFG_LAYOUT_SOURCE != PAR_CFG_LAYOUT_SCRIPT) */
 
 #define PAR_UINT16_MAX (65535u)
 /**
@@ -737,4 +647,4 @@ const par_cfg_t *par_cfg_get(const par_num_t par_num);
  */
 uint32_t par_cfg_get_table_size(void); /**< @} <!-- END GROUP --> */
 
-#endif /* _PAR_CFG_H_ */
+#endif /* !defined(_PAR_CFG_H_) */

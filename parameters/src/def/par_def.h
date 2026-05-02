@@ -23,7 +23,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* defined(__cplusplus) */
 /**
  * @brief Include dependencies.
  */
@@ -463,9 +463,9 @@ uint32_t par_cfg_get_table_size(void);
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* defined(__cplusplus) */
 /**
  * @} <!-- END GROUP -->
  */
 
-#endif /* _PAR_DEF_CORE_H_ */
+#endif /* !defined(_PAR_DEF_CORE_H_) */

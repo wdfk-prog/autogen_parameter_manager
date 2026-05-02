@@ -204,4 +204,4 @@ par_status_t par_obj_nvm_restore(const par_num_t par_num,
 #endif /* (1 == PAR_CFG_NVM_EN) */
 #endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
-#endif /* _PAR_OBJECT_H_ */
+#endif /* !defined(_PAR_OBJECT_H_) */

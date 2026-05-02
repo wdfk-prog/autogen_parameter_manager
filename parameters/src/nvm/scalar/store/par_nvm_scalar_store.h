@@ -54,4 +54,4 @@ par_status_t par_nvm_scalar_store_deinit(const par_store_backend_api_t * const p
                                          const char * const p_context);
 #endif /* (1 == PAR_CFG_NVM_EN) */
 
-#endif /* _PAR_NVM_SCALAR_STORE_H_ */
+#endif /* !defined(_PAR_NVM_SCALAR_STORE_H_) */

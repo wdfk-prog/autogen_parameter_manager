@@ -84,9 +84,9 @@ par_status_t par_nvm_reset_all(void);
  */
 par_status_t par_nvm_print_nvm_lut(void);
 
-#endif /* 1 == PAR_CFG_NVM_EN */
+#endif /* (1 == PAR_CFG_NVM_EN) */
 /**
  * @} <!-- END GROUP -->
  */
 
-#endif /* _PAR_NVM_H_ */
+#endif /* !defined(_PAR_NVM_H_) */

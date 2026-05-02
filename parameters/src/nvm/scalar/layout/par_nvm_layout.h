@@ -160,7 +160,7 @@ typedef struct
 typedef par_nvm_layout_grouped_payload_only_data_obj_t par_nvm_data_obj_t;
 #else
 #error "Unsupported PAR_CFG_NVM_RECORD_LAYOUT selection."
-#endif
+#endif /* (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_WITH_SIZE) */
 
 /**
  * @brief Selected persisted-record layout vtable.
@@ -267,7 +267,7 @@ typedef struct
     bool (*data_obj_matches)(const par_num_t par_num,
                              const par_nvm_data_obj_t * const p_expected,
                              const par_nvm_data_obj_t * const p_actual);
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 } par_nvm_layout_api_t;
 
 uint8_t par_nvm_layout_payload_size_from_type(const par_type_list_t type);
@@ -296,6 +296,6 @@ uint8_t par_nvm_layout_calc_crc_with_id(const uint16_t id,
  */
 const par_nvm_layout_api_t *par_nvm_layout_init(void);
 
-#endif /* 1 == PAR_CFG_NVM_EN */
+#endif /* (1 == PAR_CFG_NVM_EN) */
 
-#endif /* _PAR_NVM_LAYOUT_H_ */
+#endif /* !defined(_PAR_NVM_LAYOUT_H_) */

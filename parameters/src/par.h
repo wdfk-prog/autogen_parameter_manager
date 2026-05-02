@@ -98,6 +98,7 @@ typedef enum
  * @brief Parameter number type.
  */
 typedef uint16_t par_num_t;
+#if (1 == PAR_CFG_ENABLE_ACCESS)
 /**
  * @brief Parameter read/write capability bit mask.
  * @details Parameter table rows must use either ePAR_ACCESS_RO or
@@ -113,6 +114,7 @@ typedef enum
     ePAR_ACCESS_RO = ePAR_ACCESS_READ,                        /**< Parameter read only. */
     ePAR_ACCESS_RW = (ePAR_ACCESS_READ | ePAR_ACCESS_WRITE),  /**< Parameter read/write. */
 } par_access_t;
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
 /**
  * @brief External role-mask bits used by optional parameter role policy.
@@ -126,7 +128,7 @@ typedef enum
     ePAR_ROLE_MANUFACTURING = (1U << 3),                   /**< Manufacturing/production role. */
     ePAR_ROLE_ALL = (ePAR_ROLE_PUBLIC | ePAR_ROLE_SERVICE | ePAR_ROLE_DEVELOPER | ePAR_ROLE_MANUFACTURING), /**< All external roles. */
 } par_role_t;
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 /**
  * @brief 32-bit floating data type definition.
  */
@@ -153,7 +155,7 @@ typedef struct
     par_type_t min; /**< Minimum value. */
     par_type_t max; /**< Maximum value. */
 } par_range_t;
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 
 /**
  * @brief Scalar parameter metadata stored in the unified parameter table.
@@ -233,29 +235,29 @@ typedef struct par_cfg_s
 {
 #if (1 == PAR_CFG_ENABLE_NAME)
     const char *name;         /**< Parameter display name. */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
     par_value_cfg_t value_cfg; /**< Type-specific scalar or object metadata. */
 #if (1 == PAR_CFG_ENABLE_UNIT)
     const char *unit;         /**< Parameter engineering unit string. */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_UNIT) */
 #if (1 == PAR_CFG_ENABLE_DESC)
     const char *desc;         /**< Parameter description string. */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 #if (1 == PAR_CFG_ENABLE_ID)
     uint16_t id;              /**< External parameter ID. */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
     par_type_list_t type;     /**< Parameter type. */
 #if (1 == PAR_CFG_ENABLE_ACCESS)
     par_access_t access;      /**< External access capability mask. */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
     par_role_t read_roles;    /**< External roles allowed to read the parameter. */
     par_role_t write_roles;   /**< External roles allowed to write the parameter. */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 #if (1 == PAR_CFG_NVM_EN)
     bool persistent;          /**< Parameter persistence flag. */
     uint16_t persist_idx;     /**< Persistent slot index or PAR_PERSIST_IDX_INVALID. */
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 } par_cfg_t;
 /**
  * @brief Device Parameters on-change callback.
@@ -554,7 +556,7 @@ par_status_t par_get_default_arr_u32(const par_num_t par_num, uint32_t *p_buf, c
  * @return Operation status. Returns ePAR_ERROR_TYPE for object rows or ePAR_ERROR_ACCESS when write access is denied.
  */
 par_status_t par_set_by_id(const uint16_t id, const void *p_val);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
  * @brief Set one U8 parameter.
  * @param par_num Parameter number.
@@ -605,7 +607,7 @@ par_status_t par_set_i32(const par_num_t par_num, const int32_t val);
  * @return Operation status.
  */
 par_status_t par_set_f32(const par_num_t par_num, const float32_t val);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 /**
  * @brief Fast typed setters.
  *
@@ -667,7 +669,7 @@ par_status_t par_set_i32_fast(const par_num_t par_num, const int32_t val);
  * @return Operation status.
  */
 par_status_t par_set_f32_fast(const par_num_t par_num, const float32_t val);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 /**
  * @brief Fast bitwise setters for flags/bitmask parameters.
  *
@@ -751,7 +753,7 @@ par_status_t par_set_all_to_default(void);
  * range behavior.
  */
 par_status_t par_reset_all_to_default_raw(void);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RESET_ALL_RAW) */
 
 /**
  * @brief Report whether one parameter differs from its default value.
@@ -771,7 +773,7 @@ par_status_t par_has_changed(const par_num_t par_num, bool * const p_has_changed
 #define PAR_SET_I32(par_num, value) par_set_i32((par_num), (value))
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
 #define PAR_SET_F32(par_num, value) par_set_f32((par_num), (value))
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 
 /**
  * @brief Getting parameter value API (module must be first initialized before using those func).
@@ -796,7 +798,7 @@ par_status_t par_get(const par_num_t par_num, void * const p_val);
  * @return Operation status. Returns ePAR_ERROR_TYPE for object rows or ePAR_ERROR_ACCESS when read access is denied.
  */
 par_status_t par_get_by_id(const uint16_t id, void * const p_val);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
  * @brief Read one U8 parameter.
  * @param par_num Parameter number.
@@ -847,7 +849,7 @@ par_status_t par_get_i32(const par_num_t par_num, int32_t * const p_val);
  * @return Operation status. Returns ePAR_ERROR_ACCESS when read access is denied.
  */
 par_status_t par_get_f32(const par_num_t par_num, float32_t * const p_val);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 /**
  * @brief Read the configured default value for one parameter.
  * @param par_num Parameter number.
@@ -861,7 +863,7 @@ par_status_t par_get_default(const par_num_t par_num, void * const p_val);
 const par_cfg_t *par_get_config(const par_num_t par_num);
 #if (1 == PAR_CFG_ENABLE_NAME)
 const char *par_get_name(const par_num_t par_num);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 #if (1 == PAR_CFG_ENABLE_RANGE)
 /**
  * @brief Return the configured range for one parameter.
@@ -869,13 +871,13 @@ const char *par_get_name(const par_num_t par_num);
  * @return Configured parameter range.
  */
 par_range_t par_get_range(const par_num_t par_num);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 #if (1 == PAR_CFG_ENABLE_UNIT)
 const char *par_get_unit(const par_num_t par_num);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_UNIT) */
 #if (1 == PAR_CFG_ENABLE_DESC)
 const char *par_get_desc(const par_num_t par_num);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 /**
  * @brief Return the configured data type for one parameter.
  * @param par_num Parameter number.
@@ -889,7 +891,7 @@ par_type_list_t par_get_type(const par_num_t par_num);
  * @return Configured external capability mask.
  */
 par_access_t par_get_access(const par_num_t par_num);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
 /**
  * @brief Return the configured external read-role mask for one parameter.
@@ -917,7 +919,7 @@ bool par_can_read(const par_num_t par_num, const par_role_t roles);
  * @return True when write is allowed; otherwise false.
  */
 bool par_can_write(const par_num_t par_num, const par_role_t roles);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 #if (1 == PAR_CFG_NVM_EN)
 /**
  * @brief Report whether one parameter is marked persistent.
@@ -925,7 +927,7 @@ bool par_can_write(const par_num_t par_num, const par_role_t roles);
  * @return True when the parameter is persistent; otherwise false.
  */
 bool par_is_persistent(const par_num_t par_num);
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 #if (1 == PAR_CFG_ENABLE_ID)
 /**
  * @brief Resolve an external parameter ID to an internal parameter number.
@@ -941,7 +943,7 @@ par_status_t par_get_num_by_id(const uint16_t id, par_num_t * const p_par_num);
  * @return Operation status.
  */
 par_status_t par_get_id_by_num(const par_num_t par_num, uint16_t * const p_id);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 
 /**
  * @brief Parameter NVM storage API.
@@ -990,13 +992,13 @@ par_status_t par_save(const par_num_t par_num);
  * @return Operation status.
  */
 par_status_t par_save_by_id(const uint16_t par_id);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
  * @brief Rewrite the full managed parameter NVM area.
  * @return Operation status.
  */
 par_status_t par_save_clean(void);
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 
 /**
  * @brief Registration API.
@@ -1013,7 +1015,7 @@ par_status_t par_save_clean(void);
  * dispatch by the parameter module.
  */
 void par_register_on_change_cb(const par_num_t par_num, const pf_par_on_change_cb_t cb);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK) */
 #if (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION)
 /**
  * @brief Register a validation callback for one scalar parameter.
@@ -1029,7 +1031,7 @@ void par_register_validation(const par_num_t par_num, const pf_par_validation_t 
  */
 void par_register_obj_validation(const par_num_t par_num, const pf_par_obj_validation_t validation);
 #endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 #if (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK)
 /**
  * @brief Validate a description string in the port layer.
@@ -1037,7 +1039,7 @@ void par_register_obj_validation(const par_num_t par_num, const pf_par_obj_valid
  * @return True when the description is valid; otherwise false.
  */
 PAR_PORT_WEAK bool par_port_is_desc_valid(const char * const p_desc);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK) */
 
 #if defined(AUTOGEN_PM_USING_MSH_TOOL) && defined(RT_USING_FINSH)
 /**
@@ -1046,13 +1048,13 @@ PAR_PORT_WEAK bool par_port_is_desc_valid(const char * const p_desc);
  * @return Group name string, or RT_NULL when no group label is used.
  */
 PAR_PORT_WEAK const char *par_port_get_shell_group(const par_num_t par_num);
-#endif
+#endif /* defined(AUTOGEN_PM_USING_MSH_TOOL) && defined(RT_USING_FINSH) */
 
 #if (PAR_CFG_DEBUG_EN)
 const char *par_get_status_str(const par_status_t status);
-#endif
+#endif /* (PAR_CFG_DEBUG_EN) */
 /**
  * @} <!-- END GROUP -->
  */
 
-#endif /* _PAR_H_ */
+#endif /* !defined(_PAR_H_) */

@@ -263,4 +263,4 @@ const par_store_backend_api_t * par_store_backend_get_api(void)
     return par_store_backend_flash_ee_get_api();
 }
 
-#endif /* flash-ee + native */
+#endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_BACKEND_FLASH_EE_EN) && (1 == PAR_CFG_NVM_BACKEND_FLASH_EE_PORT_NATIVE_EN) */

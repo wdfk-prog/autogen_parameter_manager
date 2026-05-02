@@ -57,12 +57,12 @@ static struct
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
     pf_par_obj_validation_t obj_validation; /**< Object validation callback function (or NULL). */
 #endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 #if (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK)
     pf_par_on_change_cb_t on_change;        /**< Scalar on-change callback function (or NULL). */
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK) */
 } g_par_cb_table[ePAR_NUM_OF];
-#endif
+#endif /* ((1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) || (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK)) */
 
 
 #if (PAR_CFG_DEBUG_EN)
@@ -90,7 +90,7 @@ static const char *gs_status[] = {
     "LIMITED",
     "N/A",
 };
-#endif
+#endif /* (PAR_CFG_DEBUG_EN) */
 /**
  * @brief Function declarations and definitions.
  */
@@ -112,16 +112,7 @@ bool par_core_access_has_write(const par_access_t access)
 {
     return (((uint32_t)ePAR_ACCESS_RW) == ((uint32_t)access & (uint32_t)ePAR_ACCESS_RW));
 }
-#endif
-#if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
-/**
- * @brief Validate that a role mask contains only supported role bits.
- */
-static bool par_roles_are_valid(const par_role_t roles)
-{
-    return (0U == ((uint32_t)roles & (uint32_t)(~((uint32_t)ePAR_ROLE_ALL))));
-}
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK)
 /**
  * @brief Validate parameter description string.
@@ -136,7 +127,7 @@ PAR_PORT_WEAK bool par_port_is_desc_valid(const char * const p_desc)
 {
     return ((NULL == p_desc) || (NULL == strchr(p_desc, ',')));
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK) */
 /**
  * @brief Resolve metadata entry for parameter identified by number.
  *
@@ -233,6 +224,7 @@ bool par_core_scalar_validation_accepts(const par_num_t par_num, const par_type_
  * @param par_num Parameter number.
  * @param new_val New scalar value.
  * @param old_val Previous scalar value.
+ * @param p_value_changed Optional precomputed changed-state pointer.
  * @note This helper is called after a successful checked scalar write while
  * the setter still owns the parameter lock. Registered callbacks must not
  * re-enter parameter APIs for the same parameter. Cross-parameter updates must
@@ -240,7 +232,8 @@ bool par_core_scalar_validation_accepts(const par_num_t par_num, const par_type_
  */
 void par_core_notify_scalar_change_if_changed(const par_num_t par_num,
                                               const par_type_t new_val,
-                                              const par_type_t old_val)
+                                              const par_type_t old_val,
+                                              const bool * const p_value_changed)
 {
     const par_cfg_t *p_cfg = NULL;
     bool value_changed = false;
@@ -252,48 +245,55 @@ void par_core_notify_scalar_change_if_changed(const par_num_t par_num,
         return;
     }
 
-    p_cfg = par_get_config(par_num);
-    if (NULL == p_cfg)
+    if (NULL != p_value_changed)
     {
-        return;
+        value_changed = *p_value_changed;
     }
-
-    switch (p_cfg->type)
+    else
     {
-    case ePAR_TYPE_U8:
-        value_changed = (new_val.u8 != old_val.u8);
-        break;
+        p_cfg = par_get_config(par_num);
+        if (NULL == p_cfg)
+        {
+            return;
+        }
 
-    case ePAR_TYPE_I8:
-        value_changed = (new_val.i8 != old_val.i8);
-        break;
+        switch (p_cfg->type)
+        {
+        case ePAR_TYPE_U8:
+            value_changed = (new_val.u8 != old_val.u8);
+            break;
 
-    case ePAR_TYPE_U16:
-        value_changed = (new_val.u16 != old_val.u16);
-        break;
+        case ePAR_TYPE_I8:
+            value_changed = (new_val.i8 != old_val.i8);
+            break;
 
-    case ePAR_TYPE_I16:
-        value_changed = (new_val.i16 != old_val.i16);
-        break;
+        case ePAR_TYPE_U16:
+            value_changed = (new_val.u16 != old_val.u16);
+            break;
 
-    case ePAR_TYPE_U32:
-        value_changed = (new_val.u32 != old_val.u32);
-        break;
+        case ePAR_TYPE_I16:
+            value_changed = (new_val.i16 != old_val.i16);
+            break;
 
-    case ePAR_TYPE_I32:
-        value_changed = (new_val.i32 != old_val.i32);
-        break;
+        case ePAR_TYPE_U32:
+            value_changed = (new_val.u32 != old_val.u32);
+            break;
+
+        case ePAR_TYPE_I32:
+            value_changed = (new_val.i32 != old_val.i32);
+            break;
 
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
-    case ePAR_TYPE_F32:
-        value_changed = !par_core_f32_bits_equal(new_val.f32, old_val.f32);
-        break;
+        case ePAR_TYPE_F32:
+            value_changed = !par_core_f32_bits_equal(new_val.f32, old_val.f32);
+            break;
 #endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 
-    case ePAR_TYPE_NUM_OF:
-    default:
-        PAR_ASSERT(0);
-        break;
+        case ePAR_TYPE_NUM_OF:
+        default:
+            PAR_ASSERT(0);
+            break;
+        }
     }
 
     if (true == value_changed)
@@ -447,7 +447,7 @@ static par_status_t par_runtime_validate_id_table(const par_cfg_t * const p_par_
             PAR_ASSERT(0);
             return ePAR_ERROR_INIT;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK) */
 
 #if (1 == PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK)
         if (bucket->id != id)
@@ -459,13 +459,13 @@ static par_status_t par_runtime_validate_id_table(const par_cfg_t * const p_par_
             PAR_ASSERT(0);
             return ePAR_ERROR_INIT;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK) */
     }
 
     return ePAR_OK;
 }
-#endif
-#endif
+#endif /* ((1 == PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK) || (1 == PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK)) */
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
  * @brief Check that parameter table is correctly defined.
  *
@@ -482,7 +482,7 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
     {
         return status;
     }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) && ((1 == PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK) || (1 == PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK)) */
 
     for (uint32_t i = 0; i < ePAR_NUM_OF; i++)
     {
@@ -496,7 +496,7 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
                         (p_par_cfg[i].value_cfg.scalar.def.f32 <= p_par_cfg[i].value_cfg.scalar.range.max.f32)) &&
                        (p_par_cfg[i].value_cfg.scalar.range.min.f32 <= p_par_cfg[i].value_cfg.scalar.def.f32));
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
         if ((true == par_object_type_is_object(p_par_cfg[i].type)) &&
             (false == par_object_default_cfg_is_valid(&p_par_cfg[i].value_cfg.object)))
@@ -516,7 +516,7 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
             PAR_ASSERT(0);
             break;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 
 #if (1 == PAR_CFG_ENABLE_DESC)
         if (NULL == p_par_cfg[i].desc)
@@ -526,7 +526,7 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
             PAR_ASSERT(0);
             break;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 
 #if (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK)
         if (false == par_port_is_desc_valid(p_par_cfg[i].desc))
@@ -536,7 +536,7 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
             PAR_ASSERT(0);
             break;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK) */
     }
 
     return status;
@@ -634,7 +634,7 @@ par_status_t par_deinit(void)
 #if (1 == PAR_CFG_NVM_EN)
     deinit_status = par_nvm_deinit();
     status |= deinit_status;
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 
     deinit_status = par_if_deinit();
     status |= deinit_status;
@@ -660,8 +660,6 @@ bool par_is_init(void)
  */
 par_status_t par_acquire_mutex(const par_num_t par_num)
 {
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
-
     return par_if_aquire_mutex(par_num);
 }
 /**
@@ -671,8 +669,6 @@ par_status_t par_acquire_mutex(const par_num_t par_num)
  */
 void par_release_mutex(const par_num_t par_num)
 {
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
-
     par_if_release_mutex(par_num);
 }
 /**
@@ -806,7 +802,7 @@ par_status_t par_set_all_to_default(void)
 
     PAR_DBG_PRINT("PAR: setting all parameters to defaults");
     return status;
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RESET_ALL_RAW) */
 }
 /**
  * @brief Check if parameter changed from its default value.
@@ -980,7 +976,7 @@ const char *par_get_name(const par_num_t par_num)
 
     return NULL;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 /**
  * @brief Get parameter value range.
  *
@@ -1006,7 +1002,7 @@ par_range_t par_get_range(const par_num_t par_num)
 
     return range;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 /**
  * @brief Get parameter unit.
  *
@@ -1025,7 +1021,7 @@ const char *par_get_unit(const par_num_t par_num)
 
     return NULL;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_UNIT) */
 /**
  * @brief Get parameter description.
  *
@@ -1044,7 +1040,7 @@ const char *par_get_desc(const par_num_t par_num)
 
     return NULL;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 /**
  * @brief Get parameter type.
  *
@@ -1080,8 +1076,13 @@ par_access_t par_get_access(const par_num_t par_num)
 
     return ePAR_ACCESS_NONE;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
+/**
+ * @brief Get the configured read-role mask for one parameter.
+ * @param par_num Parameter number.
+ * @return Configured read-role mask, or ePAR_ROLE_NONE on lookup failure.
+ */
 par_role_t par_get_read_roles(const par_num_t par_num)
 {
     const par_cfg_t *par_cfg = NULL;
@@ -1094,6 +1095,11 @@ par_role_t par_get_read_roles(const par_num_t par_num)
     return ePAR_ROLE_NONE;
 }
 
+/**
+ * @brief Get the configured write-role mask for one parameter.
+ * @param par_num Parameter number.
+ * @return Configured write-role mask, or ePAR_ROLE_NONE on lookup failure.
+ */
 par_role_t par_get_write_roles(const par_num_t par_num)
 {
     const par_cfg_t *par_cfg = NULL;
@@ -1106,6 +1112,22 @@ par_role_t par_get_write_roles(const par_num_t par_num)
     return ePAR_ROLE_NONE;
 }
 
+/**
+ * @brief Validate that a role mask contains only supported role bits.
+ * @param roles Role mask to validate.
+ * @return True when the role mask contains only supported bits.
+ */
+static bool par_roles_are_valid(const par_role_t roles)
+{
+    return (0U == ((uint32_t)roles & (uint32_t)(~((uint32_t)ePAR_ROLE_ALL))));
+}
+
+/**
+ * @brief Check whether a role mask can read one parameter.
+ * @param par_num Parameter number.
+ * @param roles Candidate external role mask.
+ * @return True when the role mask is valid and read access is allowed.
+ */
 bool par_can_read(const par_num_t par_num, const par_role_t roles)
 {
     const par_cfg_t *par_cfg = NULL;
@@ -1122,11 +1144,17 @@ bool par_can_read(const par_num_t par_num, const par_role_t roles)
     {
         return false;
     }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 
     return (0U != ((uint32_t)par_cfg->read_roles & (uint32_t)roles));
 }
 
+/**
+ * @brief Check whether a role mask can write one parameter.
+ * @param par_num Parameter number.
+ * @param roles Candidate external role mask.
+ * @return True when the role mask is valid and write access is allowed.
+ */
 bool par_can_write(const par_num_t par_num, const par_role_t roles)
 {
     const par_cfg_t *par_cfg = NULL;
@@ -1143,12 +1171,12 @@ bool par_can_write(const par_num_t par_num, const par_role_t roles)
     {
         return false;
     }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 
     return (0U != ((uint32_t)par_cfg->write_roles & (uint32_t)roles));
 }
 
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 /**
  * @brief Is parameter persistent (does it store to NVM).
  *
@@ -1167,7 +1195,7 @@ bool par_is_persistent(const par_num_t par_num)
 
     return false;
 }
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 /**
  * @brief Get parameter number (enumeration) by ID.
  *
@@ -1232,7 +1260,7 @@ par_status_t par_get_id_by_num(const par_num_t par_num, uint16_t * const p_id)
 
     return ePAR_ERROR;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 
 #if (1 == PAR_CFG_NVM_EN)
 /**
@@ -1345,7 +1373,7 @@ void par_register_on_change_cb(const par_num_t par_num, const pf_par_on_change_c
 
     g_par_cb_table[par_num].on_change = cb;
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK) */
 /**
  * @brief Register parameter value validation function.
  *
@@ -1359,8 +1387,7 @@ void par_register_validation(const par_num_t par_num, const pf_par_validation_t 
 
     g_par_cb_table[par_num].validation = validation;
 }
-#endif
-
+#endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 
 
 #if (PAR_CFG_DEBUG_EN)
@@ -1393,7 +1420,7 @@ const char *par_get_status_str(const par_status_t status)
 
     return str;
 }
-#endif
+#endif /* (PAR_CFG_DEBUG_EN) */
 /**
  * @} <!-- END GROUP -->
  */

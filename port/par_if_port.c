@@ -66,6 +66,10 @@
  * @brief Parameters OS mutex.
  */
 static struct rt_mutex g_par_mutex;
+
+/**
+ * @brief Mutex initialization state flag.
+ */
 static bool g_par_mutex_ready = false;
 /**
  * @brief USER VARIABLES END...
@@ -97,7 +101,7 @@ par_status_t par_if_init(void)
 #else
     g_par_mutex_ready = false;
     PAR_DBG_PRINT("PAR_IF: mutex protection disabled");
-#endif
+#endif /* (1 == PAR_CFG_MUTEX_EN) */
 
     return status;
 }
@@ -126,7 +130,7 @@ par_status_t par_if_deinit(void)
     }
 
     g_par_mutex_ready = false;
-#endif
+#endif /* (1 == PAR_CFG_MUTEX_EN) */
 
     return status;
 }
@@ -150,7 +154,7 @@ par_status_t par_if_aquire_mutex(const par_num_t par_num)
         status = ePAR_ERROR;
         PAR_ERR_PRINT("PAR_IF: mutex take timed out, par_num=%u", (unsigned)par_num);
     }
-#endif
+#endif /* (1 == PAR_CFG_MUTEX_EN) */
 
     return status;
 }
@@ -169,11 +173,11 @@ void par_if_release_mutex(const par_num_t par_num)
     RT_UNUSED(par_num);
 #if (1 == PAR_CFG_MUTEX_EN)
     (void)rt_mutex_release(&g_par_mutex);
-#endif
+#endif /* (1 == PAR_CFG_MUTEX_EN) */
 }
 
 
-#endif
+#endif /* (1 == PAR_CFG_IF_PORT_EN) */
 /**
  * @} <!-- END GROUP -->
  */

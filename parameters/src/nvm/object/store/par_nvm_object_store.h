@@ -46,4 +46,4 @@ par_status_t par_nvm_object_store_deinit(void);
 const par_store_backend_api_t *par_nvm_object_store_get_api(void);
 #endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
-#endif /* _PAR_NVM_OBJECT_STORE_H_ */
+#endif /* !defined(_PAR_NVM_OBJECT_STORE_H_) */

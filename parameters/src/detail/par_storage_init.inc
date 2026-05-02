@@ -30,9 +30,15 @@
 #define PAR_STORAGE_U32_FROM_I32(...) (par_atomic_u32_t)((uint32_t)(int32_t)(PAR_XARG_DEF(__VA_ARGS__))),
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
 #define PAR_STORAGE_U32_FROM_F32(...) (par_atomic_u32_t)(0u),
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 #define PAR_STORAGE_OBJECT_NOP(...)
 
+/**
+ * @brief Live grouped scalar storage initialized from par_table.def defaults.
+ * @details The grouped arrays hold U8/I8, U16/I16, and U32/I32/F32
+ * values in separate atomic-width backing stores. Object rows expand to
+ * no-op initializers because their payloads are owned by par_object.c.
+ */
 static par_storage_groups_t gs_par_storage = {
     .u8 = {
 #define PAR_ITEM_U8                      PAR_STORAGE_U8_FROM_U8
@@ -93,7 +99,7 @@ static par_storage_groups_t gs_par_storage = {
 #define PAR_ITEM_F32 PAR_STORAGE_U32_FROM_F32
 #else
 #define PAR_ITEM_F32 PAR_STORAGE_INIT_NOP
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_STORAGE_OBJECT_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_STORAGE_OBJECT_NOP
 #include "par_object_item_bind.inc"
@@ -120,5 +126,5 @@ static par_storage_groups_t gs_par_storage = {
 #undef PAR_STORAGE_U32_FROM_I32
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
 #undef PAR_STORAGE_U32_FROM_F32
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 #undef PAR_STORAGE_OBJECT_NOP

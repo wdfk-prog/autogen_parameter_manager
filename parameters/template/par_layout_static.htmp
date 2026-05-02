@@ -22,7 +22,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* defined(__cplusplus) */
 
 /**
  * @brief Static layout contract template.
@@ -61,6 +61,6 @@ extern const uint32_t g_par_layout_static_object_pool_offset[ePAR_NUM_OF];
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* defined(__cplusplus) */
 
-#endif /* _PAR_LAYOUT_STATIC_H_ */
+#endif /* !defined(_PAR_LAYOUT_STATIC_H_) */

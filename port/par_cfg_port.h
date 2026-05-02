@@ -26,11 +26,11 @@
  */
 #ifdef AUTOGEN_PM_USING_RTT_AT24CXX_BACKEND
 #include <at24cxx.h>
-#endif
+#endif /* defined(AUTOGEN_PM_USING_RTT_AT24CXX_BACKEND) */
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* defined(__cplusplus) */
 /**
  * @brief Kconfig bridge: AUTOGEN_PM_* overrides PAR_CFG_* settings.
  */
@@ -50,7 +50,7 @@ extern "C" {
 #define PAR_CFG_MUTEX_EN (1)
 #else
 #define PAR_CFG_MUTEX_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_MUTEX) */
 
 /**
  * @brief Forward AUTOGEN_PM_MUTEX_TIMEOUT_MS to PAR_CFG_MUTEX_TIMEOUT_MS.
@@ -60,7 +60,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_MUTEX_TIMEOUT_MS
 #define PAR_CFG_MUTEX_TIMEOUT_MS AUTOGEN_PM_MUTEX_TIMEOUT_MS
-#endif
+#endif /* defined(AUTOGEN_PM_MUTEX_TIMEOUT_MS) */
 
 /**
  * @brief Enable diagnostic logs from AUTOGEN_PM_USING_DEBUG.
@@ -72,7 +72,7 @@ extern "C" {
 #define PAR_CFG_DEBUG_EN (1)
 #else
 #define PAR_CFG_DEBUG_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_DEBUG) */
 
 /**
  * @brief Enable RT_ASSERT-backed checks from AUTOGEN_PM_USING_ASSERT.
@@ -84,7 +84,7 @@ extern "C" {
 #define PAR_CFG_ASSERT_EN (1)
 #else
 #define PAR_CFG_ASSERT_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_ASSERT) */
 
 /**
  * @brief Enable managed NVM storage from AUTOGEN_PM_USING_NVM.
@@ -96,7 +96,7 @@ extern "C" {
 #define PAR_CFG_NVM_EN (1)
 #else
 #define PAR_CFG_NVM_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_NVM) */
 
 /**
  * @brief Select backend storage region from AUTOGEN_PM_NVM_REGION.
@@ -106,7 +106,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_NVM_REGION
 #define PAR_CFG_NVM_REGION AUTOGEN_PM_NVM_REGION
-#endif
+#endif /* defined(AUTOGEN_PM_NVM_REGION) */
 
 /**
  * @brief Enable the legacy GEL NVM backend.
@@ -118,7 +118,7 @@ extern "C" {
 #define PAR_CFG_NVM_BACKEND_GEL_EN (1)
 #else
 #define PAR_CFG_NVM_BACKEND_GEL_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_NVM_BACKEND_GEL) */
 
 /**
  * @brief Enable the RT-Thread AT24CXX NVM backend.
@@ -130,7 +130,7 @@ extern "C" {
 #define PAR_CFG_NVM_BACKEND_RTT_AT24CXX_EN (1)
 #else
 #define PAR_CFG_NVM_BACKEND_RTT_AT24CXX_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_RTT_AT24CXX_BACKEND) */
 
 /**
  * @brief Enable persisted image compatibility checks.
@@ -142,7 +142,7 @@ extern "C" {
 #define PAR_CFG_TABLE_ID_CHECK_EN (1)
 #else
 #define PAR_CFG_TABLE_ID_CHECK_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_TABLE_ID_CHECK) */
 
 /**
  * @brief Forward the manual table-ID schema version.
@@ -152,7 +152,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_TABLE_ID_SCHEMA_VER
 #define PAR_CFG_TABLE_ID_SCHEMA_VER ((uint32_t)AUTOGEN_PM_TABLE_ID_SCHEMA_VER)
-#endif
+#endif /* defined(AUTOGEN_PM_TABLE_ID_SCHEMA_VER) */
 
 /**
  * @brief Enable the Flash EEPROM-emulation backend.
@@ -164,7 +164,7 @@ extern "C" {
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_EN (1)
 #else
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_USING_FLASH_EE_BACKEND) */
 
 /**
  * @brief Bind the Flash EE backend to FAL.
@@ -176,7 +176,7 @@ extern "C" {
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_PORT_FAL_EN (1)
 #else
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_PORT_FAL_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_PORT_FAL) */
 
 /**
  * @brief Bind the Flash EE backend to native flash hooks.
@@ -188,7 +188,7 @@ extern "C" {
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_PORT_NATIVE_EN (1)
 #else
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_PORT_NATIVE_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_PORT_NATIVE) */
 
 /**
  * @brief Enable scalar NVM write-readback verification.
@@ -200,7 +200,7 @@ extern "C" {
 #define PAR_CFG_NVM_WRITE_VERIFY_EN (1)
 #else
 #define PAR_CFG_NVM_WRITE_VERIFY_EN (0)
-#endif
+#endif /* defined(AUTOGEN_PM_NVM_WRITE_VERIFY) */
 /**
  * @brief Enable scalar parameter persistence.
  *
@@ -237,8 +237,7 @@ extern "C" {
 #if defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION) || \
     defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION_SRC_ADDR)
 #error "Object persistence migration Kconfig is not supported; use fixed or dedicated placement!"
-#endif /* defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION) || \
-          defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION_SRC_ADDR) */
+#endif /* defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION) || defined(AUTOGEN_PM_NVM_OBJECT_MIGRATION_SRC_ADDR) */
 
 /**
  * @brief Select shared scalar/object persistence backend mode from Kconfig.
@@ -323,7 +322,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_FLASH_EE_LOGICAL_SIZE
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_LOGICAL_SIZE (AUTOGEN_PM_FLASH_EE_LOGICAL_SIZE)
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_LOGICAL_SIZE) */
 
 /**
  * @brief Configure Flash EE RAM cache size.
@@ -333,7 +332,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_FLASH_EE_CACHE_SIZE
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_CACHE_SIZE ((uint32_t)AUTOGEN_PM_FLASH_EE_CACHE_SIZE)
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_CACHE_SIZE) */
 
 /**
  * @brief Configure Flash EE logical line size.
@@ -343,7 +342,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_FLASH_EE_LINE_SIZE
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_LINE_SIZE ((uint32_t)AUTOGEN_PM_FLASH_EE_LINE_SIZE)
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_LINE_SIZE) */
 
 /**
  * @brief Configure Flash EE minimum program size.
@@ -353,7 +352,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_FLASH_EE_PROGRAM_SIZE
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_PROGRAM_SIZE ((uint32_t)AUTOGEN_PM_FLASH_EE_PROGRAM_SIZE)
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_PROGRAM_SIZE) */
 
 /**
  * @brief Configure the FAL partition used by Flash EE.
@@ -363,7 +362,7 @@ extern "C" {
  */
 #ifdef AUTOGEN_PM_FLASH_EE_FAL_PARTITION_NAME
 #define PAR_CFG_NVM_BACKEND_FLASH_EE_FAL_PARTITION_NAME AUTOGEN_PM_FLASH_EE_FAL_PARTITION_NAME
-#endif
+#endif /* defined(AUTOGEN_PM_FLASH_EE_FAL_PARTITION_NAME) */
 
 /**
  * @brief Select the scalar NVM record layout from menuconfig.
@@ -381,7 +380,7 @@ extern "C" {
 #define PAR_CFG_NVM_RECORD_LAYOUT (PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY)
 #elif defined(AUTOGEN_PM_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY)
 #define PAR_CFG_NVM_RECORD_LAYOUT (PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY)
-#endif
+#endif /* defined(AUTOGEN_PM_NVM_RECORD_LAYOUT_FIXED_SLOT_WITH_SIZE) */
 
 /**
  * @brief Enable scalar min/max range metadata.
@@ -393,7 +392,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_RANGE (1)
 #else
 #define PAR_CFG_ENABLE_RANGE (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_RANGE) */
 
 /**
  * @brief Enable F32 scalar parameter support.
@@ -405,7 +404,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_TYPE_F32 (1)
 #else
 #define PAR_CFG_ENABLE_TYPE_F32 (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_TYPE_F32) */
 
 
 /**
@@ -492,7 +491,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_RUNTIME_VALIDATION (1)
 #else
 #define PAR_CFG_ENABLE_RUNTIME_VALIDATION (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_RUNTIME_VALIDATION) */
 
 /**
  * @brief Enable scalar change callbacks.
@@ -504,7 +503,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_CHANGE_CALLBACK (1)
 #else
 #define PAR_CFG_ENABLE_CHANGE_CALLBACK (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_CHANGE_CALLBACK) */
 
 /**
  * @brief Enable raw reset-all mirror storage.
@@ -516,7 +515,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_RESET_ALL_RAW (1)
 #else
 #define PAR_CFG_ENABLE_RESET_ALL_RAW (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_RESET_ALL_RAW) */
 
 /**
  * @brief Enable parameter name metadata.
@@ -528,7 +527,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_NAME (1)
 #else
 #define PAR_CFG_ENABLE_NAME (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_NAME) */
 
 /**
  * @brief Enable parameter unit metadata.
@@ -540,7 +539,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_UNIT (1)
 #else
 #define PAR_CFG_ENABLE_UNIT (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_UNIT) */
 
 /**
  * @brief Enable parameter description metadata.
@@ -552,7 +551,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_DESC (1)
 #else
 #define PAR_CFG_ENABLE_DESC (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_DESC) */
 
 /**
  * @brief Enable description validation during init.
@@ -564,7 +563,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_DESC_CHECK (1)
 #else
 #define PAR_CFG_ENABLE_DESC_CHECK (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_DESC_CHECK) */
 
 /**
  * @brief Enable external parameter IDs.
@@ -576,7 +575,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_ID (1)
 #else
 #define PAR_CFG_ENABLE_ID (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_ID) */
 
 /**
  * @brief Enable runtime duplicate-ID diagnostics.
@@ -587,7 +586,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK (1)
 #else
 #define PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_RUNTIME_ID_DUP_CHECK) */
 
 /**
  * @brief Enable runtime ID-map hash collision diagnostics.
@@ -598,7 +597,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK (1)
 #else
 #define PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK) */
 
 /**
  * @brief Enable read/write access metadata.
@@ -610,7 +609,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_ACCESS (1)
 #else
 #define PAR_CFG_ENABLE_ACCESS (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_ACCESS) */
 
 /**
  * @brief Enable optional role-policy metadata.
@@ -622,7 +621,7 @@ extern "C" {
 #define PAR_CFG_ENABLE_ROLE_POLICY (1)
 #else
 #define PAR_CFG_ENABLE_ROLE_POLICY (0)
-#endif
+#endif /* defined(AUTOGEN_PM_ENABLE_ROLE_POLICY) */
 
 #ifdef AUTOGEN_PM_USING_RTT_AT24CXX_BACKEND
 /**
@@ -630,21 +629,21 @@ extern "C" {
  */
 #ifndef PAR_CFG_RTT_AT24_I2C_BUS_NAME
 #define PAR_CFG_RTT_AT24_I2C_BUS_NAME AUTOGEN_PM_RTT_AT24_I2C_BUS_NAME
-#endif
+#endif /* !defined(PAR_CFG_RTT_AT24_I2C_BUS_NAME) */
 
 /**
  * @brief RT-Thread AT24CXX address-input bits (A2:A0).
  */
 #ifndef PAR_CFG_RTT_AT24_ADDR_INPUT
 #define PAR_CFG_RTT_AT24_ADDR_INPUT ((uint8_t)AUTOGEN_PM_RTT_AT24_ADDR_INPUT)
-#endif
+#endif /* !defined(PAR_CFG_RTT_AT24_ADDR_INPUT) */
 
 /**
  * @brief Start offset of the parameter-owned EEPROM window.
  */
 #ifndef PAR_CFG_RTT_AT24_BASE_ADDR
 #define PAR_CFG_RTT_AT24_BASE_ADDR ((uint32_t)AUTOGEN_PM_RTT_AT24_BASE_ADDR)
-#endif
+#endif /* !defined(PAR_CFG_RTT_AT24_BASE_ADDR) */
 
 /**
  * @brief Size of the parameter-owned EEPROM window.
@@ -654,15 +653,15 @@ extern "C" {
  */
 #ifndef PAR_CFG_RTT_AT24_SIZE
 #define PAR_CFG_RTT_AT24_SIZE ((uint32_t)AT24CXX_MAX_MEM_ADDRESS)
-#endif
+#endif /* !defined(PAR_CFG_RTT_AT24_SIZE) */
 
 /**
  * @brief Chunk size used when erase is emulated by writing 0xFF.
  */
 #ifndef PAR_STORE_RTT_AT24_ERASE_CHUNK
 #define PAR_STORE_RTT_AT24_ERASE_CHUNK ((uint32_t)AUTOGEN_PM_RTT_AT24_ERASE_CHUNK)
-#endif
-#endif
+#endif /* !defined(PAR_STORE_RTT_AT24_ERASE_CHUNK) */
+#endif /* defined(AUTOGEN_PM_USING_RTT_AT24CXX_BACKEND) */
 
 /**
  * @brief Always use the RT-Thread par_if port in package builds.
@@ -700,7 +699,7 @@ extern "C" {
 #define DBG_LVL DBG_LOG
 #else
 #define DBG_LVL DBG_INFO
-#endif
+#endif /* defined(AUTOGEN_PM_USING_DEBUG) */
 #include <rtdbg.h>
 /**
  * @brief Map module log macros to RT-Thread rtdbg.
@@ -712,6 +711,6 @@ extern "C" {
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* defined(__cplusplus) */
 
-#endif /* _PAR_CFG_PORT_H_ */
+#endif /* !defined(_PAR_CFG_PORT_H_) */

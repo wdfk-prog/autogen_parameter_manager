@@ -164,6 +164,6 @@ par_status_t par_object_store_backend_bind(void);
  */
 const par_store_backend_api_t * par_object_store_backend_get_api(void);
 #endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
-#endif /* 1 == PAR_CFG_NVM_EN */
+#endif /* (1 == PAR_CFG_NVM_EN) */
 
-#endif /* _PAR_STORE_BACKEND_H_ */
+#endif /* !defined(_PAR_STORE_BACKEND_H_) */

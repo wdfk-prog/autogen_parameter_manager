@@ -142,6 +142,9 @@ typedef struct
 #define PAR_NVM_LAYOUT_GROUPED_PAYLOAD_ONLY_ADDR_ENTRY_SELECT_I(enum_, pers_) PAR_NVM_LAYOUT_GROUPED_PAYLOAD_ONLY_ADDR_ENTRY_SELECT_##pers_(enum_)
 #define PAR_NVM_LAYOUT_GROUPED_PAYLOAD_ONLY_ADDR_ENTRY_SELECT_1(enum_)        [PAR_PERSIST_IDX_##enum_] = PAR_NVM_LAYOUT_GROUPED_PAYLOAD_ONLY_OFFSET_OF(enum_),
 #define PAR_NVM_LAYOUT_GROUPED_PAYLOAD_ONLY_ADDR_ENTRY_SELECT_0(enum_)
+/**
+ * @brief Compile-time grouped-payload-only offset lookup by persistent slot.
+ */
 static const uint32_t g_par_nvm_layout_grouped_payload_only_addr_lut[PAR_PERSIST_SLOT_MAP_CAPACITY] = {
 #define PAR_ITEM_NOP(...)
 #define PAR_ITEM_U8(...)  PAR_NVM_LAYOUT_GROUPED_PAYLOAD_ONLY_ADDR_ENTRY_SELECT(PAR_XARG_ENUM(__VA_ARGS__), PAR_XARG_PERS(__VA_ARGS__))
@@ -371,7 +374,7 @@ static bool par_nvm_layout_grouped_payload_only_data_obj_matches(const par_num_t
     par_nvm_layout_pack_payload_bytes(p_cfg->type, &p_actual->data, actual_payload);
     return (0 == memcmp(expected_payload, actual_payload, payload_size));
 }
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 
 /**
  * @brief Concrete layout adapter bound by the common NVM core.
@@ -387,7 +390,7 @@ static const par_nvm_layout_api_t g_par_nvm_layout_api = {
     .check_compat = par_nvm_layout_grouped_payload_only_check_compat,
 #if (1 == PAR_CFG_NVM_WRITE_VERIFY_EN)
     .data_obj_matches = par_nvm_layout_grouped_payload_only_data_obj_matches,
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 };
 
 /**
@@ -400,4 +403,4 @@ const par_nvm_layout_api_t *par_nvm_layout_init(void)
     return &g_par_nvm_layout_api;
 }
 
-#endif /* grouped-payload-only */
+#endif /* (1 == PAR_CFG_NVM_EN) && (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_GROUPED_PAYLOAD_ONLY) */

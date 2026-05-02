@@ -16,7 +16,7 @@
 #include <rtthread.h>
 #ifdef RT_USING_FINSH
 #include <finsh.h>
-#endif
+#endif /* defined(RT_USING_FINSH) */
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -47,7 +47,7 @@
  */
 typedef struct
 {
-    uint16_t id;      /**< External parameter identifier. */
+    uint16_t id;       /**< External parameter identifier. */
     par_num_t par_num; /**< Internal parameter number. */
 } par_shell_target_t;
 
@@ -146,6 +146,7 @@ static bool par_shell_type_is_object(const par_type_list_t type)
 }
 #endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
+#if (1 == PAR_CFG_ENABLE_ACCESS)
 #if (defined(AUTOGEN_PM_MSH_CMD_INFO) || defined(AUTOGEN_PM_MSH_CMD_JSON))
 /**
  * @brief Convert access flags to a short shell string.
@@ -172,6 +173,7 @@ static const char *par_shell_access_str(const par_access_t access)
     return "none";
 }
 #endif /* (defined(AUTOGEN_PM_MSH_CMD_INFO) || defined(AUTOGEN_PM_MSH_CMD_JSON)) */
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
 /**
@@ -229,7 +231,7 @@ static const char *par_shell_roles_to_cstr(const par_role_t roles, char *buf, co
  * @param[out] p_role Parsed role mask.
  * @return true on success.
  */
-static bool par_shell_role_name_to_mask(const char *token, par_role_t * const p_role)
+static bool par_shell_role_name_to_mask(const char *token, par_role_t *const p_role)
 {
     if ((token == RT_NULL) || (p_role == RT_NULL))
     {
@@ -276,7 +278,7 @@ static bool par_shell_role_name_to_mask(const char *token, par_role_t * const p_
  * @param[out] p_roles Parsed role mask.
  * @return true on success.
  */
-static bool par_shell_parse_roles(const char *str, par_role_t * const p_roles)
+static bool par_shell_parse_roles(const char *str, par_role_t *const p_roles)
 {
     char buf[64];
     char *token;
@@ -359,7 +361,6 @@ static bool par_shell_can_write(const par_num_t par_num)
     return par_can_write(par_num, par_shell_get_roles());
 }
 #endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
-
 
 /**
  * @brief Resolve an optional shell group name for one parameter.
@@ -465,7 +466,7 @@ static void par_shell_f32_to_str(char *buf, const rt_size_t buf_size, float32_t 
  * @param buf_size Destination buffer size.
  * @return Pointer to the formatted string.
  */
-static const char *par_shell_value_to_cstr(const par_type_list_t type, const par_type_t * const p_value, char *buf, const rt_size_t buf_size)
+static const char *par_shell_value_to_cstr(const par_type_list_t type, const par_type_t *const p_value, char *buf, const rt_size_t buf_size)
 {
     if ((p_value == RT_NULL) || (buf == RT_NULL) || (buf_size == 0U))
     {
@@ -519,7 +520,7 @@ static const char *par_shell_value_to_cstr(const par_type_list_t type, const par
  * @param buf_size Destination buffer size.
  * @return Pointer to the formatted string.
  */
-static const char *par_shell_default_to_cstr(const par_cfg_t * const p_cfg, char *buf, const rt_size_t buf_size)
+static const char *par_shell_default_to_cstr(const par_cfg_t *const p_cfg, char *buf, const rt_size_t buf_size)
 {
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
     if ((p_cfg != RT_NULL) && (true == par_shell_type_is_object(p_cfg->type)))
@@ -542,7 +543,7 @@ static const char *par_shell_default_to_cstr(const par_cfg_t * const p_cfg, char
  * @param buf_size Destination buffer size.
  * @return Pointer to the formatted string.
  */
-static const char *par_shell_min_to_cstr(const par_cfg_t * const p_cfg, char *buf, const rt_size_t buf_size)
+static const char *par_shell_min_to_cstr(const par_cfg_t *const p_cfg, char *buf, const rt_size_t buf_size)
 {
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
     if ((p_cfg != RT_NULL) && (true == par_shell_type_is_object(p_cfg->type)))
@@ -562,7 +563,7 @@ static const char *par_shell_min_to_cstr(const par_cfg_t * const p_cfg, char *bu
  * @param buf_size Destination buffer size.
  * @return Pointer to the formatted string.
  */
-static const char *par_shell_max_to_cstr(const par_cfg_t * const p_cfg, char *buf, const rt_size_t buf_size)
+static const char *par_shell_max_to_cstr(const par_cfg_t *const p_cfg, char *buf, const rt_size_t buf_size)
 {
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
     if ((p_cfg != RT_NULL) && (true == par_shell_type_is_object(p_cfg->type)))
@@ -683,7 +684,7 @@ static const char *par_shell_status_to_cstr(const par_status_t status, char *buf
  */
 static const char *par_shell_object_value_to_cstr(const par_num_t par_num,
                                                   const par_status_t status,
-                                                  const par_type_t * const p_value,
+                                                  const par_type_t *const p_value,
                                                   char *buf,
                                                   const rt_size_t buf_size)
 {
@@ -728,7 +729,7 @@ static const char *par_shell_object_value_to_cstr(const par_num_t par_num,
 static const char *par_shell_current_value_to_cstr(const par_num_t par_num,
                                                    const par_type_list_t type,
                                                    const par_status_t status,
-                                                   const par_type_t * const p_value,
+                                                   const par_type_t *const p_value,
                                                    char *buf,
                                                    const rt_size_t buf_size)
 {
@@ -757,7 +758,7 @@ static const char *par_shell_current_value_to_cstr(const par_num_t par_num,
  * @param[out] p_value Parsed value.
  * @return true on success.
  */
-static bool par_shell_parse_u16(const char *str, uint16_t * const p_value)
+static bool par_shell_parse_u16(const char *str, uint16_t *const p_value)
 {
     char *end = RT_NULL;
     unsigned long value;
@@ -785,7 +786,7 @@ static bool par_shell_parse_u16(const char *str, uint16_t * const p_value)
  * @param[out] p_value Parsed value.
  * @return true on success.
  */
-static bool par_shell_parse_u32(const char *str, uint32_t * const p_value)
+static bool par_shell_parse_u32(const char *str, uint32_t *const p_value)
 {
     char *end = RT_NULL;
     unsigned long value;
@@ -817,7 +818,6 @@ static bool par_shell_parse_u32(const char *str, uint32_t * const p_value)
 }
 #endif /* (defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID)) */
 
-
 #if (defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID))
 /**
  * @brief Parse one signed 32-bit integer from shell input.
@@ -825,7 +825,7 @@ static bool par_shell_parse_u32(const char *str, uint32_t * const p_value)
  * @param[out] p_value Parsed value.
  * @return true on success.
  */
-static bool par_shell_parse_i32(const char *str, int32_t * const p_value)
+static bool par_shell_parse_i32(const char *str, int32_t *const p_value)
 {
     char *end = RT_NULL;
     long value;
@@ -854,7 +854,7 @@ static bool par_shell_parse_i32(const char *str, int32_t * const p_value)
  * @param[out] p_value Destination typed value for scalar rows.
  * @return Parameter status code.
  */
-static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t * const p_value);
+static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t *const p_value);
 #endif /* (defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)) */
 
 #if (defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) && (1 == PAR_SHELL_OBJECT_GET_ENABLED))
@@ -1272,7 +1272,7 @@ static par_status_t par_shell_print_object_get(const par_num_t par_num, const pa
  * @param[out] p_target Resolved shell target.
  * @return true on success.
  */
-static bool par_shell_resolve_target(const char *id_str, par_shell_target_t * const p_target)
+static bool par_shell_resolve_target(const char *id_str, par_shell_target_t *const p_target)
 {
     if ((id_str == RT_NULL) || (p_target == RT_NULL))
     {
@@ -1298,7 +1298,7 @@ static bool par_shell_resolve_target(const char *id_str, par_shell_target_t * co
  * @param[out] p_value Destination typed value for scalar rows.
  * @return Parameter status code.
  */
-static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t * const p_value)
+static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t *const p_value)
 {
     const par_type_list_t type = par_get_type(par_num);
 
@@ -1312,7 +1312,7 @@ static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t * co
     {
         return ePAR_ERROR_ACCESS;
     }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 
     switch (type)
     {
@@ -1372,7 +1372,7 @@ static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t * co
  * @param[out] p_value Parsed typed value.
  * @return true on success.
  */
-static bool par_shell_parse_value(const char *str, const par_type_list_t type, par_type_t * const p_value)
+static bool par_shell_parse_value(const char *str, const par_type_list_t type, par_type_t *const p_value)
 {
     char *end = RT_NULL;
     unsigned long uval;
@@ -1444,9 +1444,9 @@ static bool par_shell_parse_value(const char *str, const par_type_list_t type, p
  */
 static bool par_shell_parse_set_args(const int argc,
                                      char **argv,
-                                     par_shell_target_t * const p_target,
-                                     const char ** const p_value_str,
-                                     char * const pair_buf,
+                                     par_shell_target_t *const p_target,
+                                     const char **const p_value_str,
+                                     char *const pair_buf,
                                      const rt_size_t pair_buf_size)
 {
     char *comma;
@@ -1498,30 +1498,30 @@ static void par_shell_print_usage(void)
     rt_kprintf("  help                    Show this help\n");
 #if defined(AUTOGEN_PM_MSH_CMD_INFO)
     rt_kprintf("  info                    Print parameter table\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_INFO) */
 #if defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID)
     rt_kprintf("  get <id>                Get scalar value or object payload by ID\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID) */
 #if defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID)
     rt_kprintf("  set <id> <value>        Set scalar parameter value by ID\n");
     rt_kprintf("  set <id>,<value>        Alternate compact syntax\n");
     rt_kprintf("  note: object rows use typed firmware APIs only\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID) */
 #if defined(AUTOGEN_PM_MSH_CMD_DEF) && (1 == PAR_CFG_ENABLE_ID)
     rt_kprintf("  def <id>                Restore one parameter to default\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_DEF) && (1 == PAR_CFG_ENABLE_ID) */
 #if defined(AUTOGEN_PM_MSH_CMD_DEF_ALL)
     rt_kprintf("  def_all                 Restore all parameters to default\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_DEF_ALL) */
 #if defined(AUTOGEN_PM_MSH_CMD_SAVE) && (1 == PAR_CFG_NVM_EN)
     rt_kprintf("  save                    Save all persistent parameters\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SAVE) && (1 == PAR_CFG_NVM_EN) */
 #if defined(AUTOGEN_PM_MSH_CMD_SAVE_CLEAN) && (1 == PAR_CFG_NVM_EN)
     rt_kprintf("  save_clean              Rewrite managed parameter NVM area\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SAVE_CLEAN) && (1 == PAR_CFG_NVM_EN) */
 #if defined(AUTOGEN_PM_MSH_CMD_JSON)
     rt_kprintf("  json                    Export parameter table as JSON\n");
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_JSON) */
 }
 
 #if defined(AUTOGEN_PM_MSH_CMD_INFO)
@@ -1537,13 +1537,13 @@ static void par_shell_cmd_info(void)
     rt_kprintf(";ID,Name,Value,Def,Min,Max,Unit,Type,Access,ReadRoles,WriteRoles,Persistance,Description\n");
 #else
     rt_kprintf(";ID,Name,Value,Def,Min,Max,Unit,Type,Access,Persistance,Description\n");
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
     rt_kprintf(": \n");
 
     for (par_num = 0U; par_num < ePAR_NUM_OF; par_num++)
     {
         const par_cfg_t *cfg = par_get_config(par_num);
-        par_type_t value = { 0 };
+        par_type_t value = {0};
         par_status_t value_status;
         char cur_buf[32];
         char def_buf[32];
@@ -1559,7 +1559,7 @@ static void par_shell_cmd_info(void)
         char write_roles_buf[48];
         const char *read_roles = "none";
         const char *write_roles = "none";
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
         unsigned int persistent = 0U;
 
         if (cfg == RT_NULL)
@@ -1567,40 +1567,39 @@ static void par_shell_cmd_info(void)
             continue;
         }
 
-
         value_status = par_shell_get_value(par_num, &value);
 
 #if (1 == PAR_CFG_ENABLE_ID)
         id = cfg->id;
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 #if (1 == PAR_CFG_ENABLE_NAME)
         if (cfg->name != RT_NULL)
         {
             name = cfg->name;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 #if (1 == PAR_CFG_ENABLE_UNIT)
         if (cfg->unit != RT_NULL)
         {
             unit = cfg->unit;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_UNIT) */
 #if (1 == PAR_CFG_ENABLE_DESC)
         if (cfg->desc != RT_NULL)
         {
             desc = cfg->desc;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 #if (1 == PAR_CFG_ENABLE_ACCESS)
         access = par_shell_access_str(cfg->access);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
         read_roles = par_shell_roles_to_cstr(cfg->read_roles, read_roles_buf, sizeof(read_roles_buf));
         write_roles = par_shell_roles_to_cstr(cfg->write_roles, write_roles_buf, sizeof(write_roles_buf));
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 #if (1 == PAR_CFG_NVM_EN)
         persistent = cfg->persistent ? 1U : 0U;
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 
         last_group = par_shell_print_group_marker(par_num, last_group);
 
@@ -1615,7 +1614,7 @@ static void par_shell_cmd_info(void)
                    par_shell_max_to_cstr(cfg, max_buf, sizeof(max_buf)));
 #else
         rt_kprintf(",,");
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
         rt_kprintf("%s,%u,%s,%s,%s,%u,%s\n",
                    unit,
@@ -1632,12 +1631,12 @@ static void par_shell_cmd_info(void)
                    access,
                    persistent,
                    desc);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
     }
 
     rt_kprintf(";END\n");
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_INFO) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID)
 /**
@@ -1648,7 +1647,7 @@ static void par_shell_cmd_info(void)
 static void par_shell_cmd_get(const int argc, char **argv)
 {
     par_shell_target_t target;
-    par_type_t value = { 0 };
+    par_type_t value = {0};
     char value_buf[32];
     par_status_t status;
 
@@ -1692,7 +1691,7 @@ static void par_shell_cmd_get(const int argc, char **argv)
         par_shell_print_status("par_get", status);
     }
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID)
 /**
@@ -1703,7 +1702,7 @@ static void par_shell_cmd_get(const int argc, char **argv)
 static void par_shell_cmd_set(const int argc, char **argv)
 {
     par_shell_target_t target;
-    par_type_t value = { 0 };
+    par_type_t value = {0};
     char value_buf[32];
     char pair_buf[96];
     const char *value_str = RT_NULL;
@@ -1741,7 +1740,7 @@ static void par_shell_cmd_set(const int argc, char **argv)
         rt_kprintf("ERR, parameter is not externally writable\n");
         return;
     }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 
     switch (par_get_type(target.par_num))
     {
@@ -1778,7 +1777,7 @@ static void par_shell_cmd_set(const int argc, char **argv)
     }
     else if (status == ePAR_WAR_LIMITED)
     {
-        par_type_t applied_value = { 0 };
+        par_type_t applied_value = {0};
 
         if (par_shell_get_value(target.par_num, &applied_value) == ePAR_OK)
         {
@@ -1792,7 +1791,7 @@ static void par_shell_cmd_set(const int argc, char **argv)
         par_shell_print_status("par_set", status);
     }
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID) */
 
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
 /**
@@ -1856,7 +1855,7 @@ static void par_shell_cmd_role(const int argc, char **argv)
 
     rt_kprintf("ERR, usage: par role [set|add|del <roles> | clear]\n");
 }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_DEF) && (1 == PAR_CFG_ENABLE_ID)
 /**
@@ -1887,7 +1886,7 @@ static void par_shell_cmd_def(const int argc, char **argv)
         par_shell_print_status("par_def", status);
     }
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_DEF) && (1 == PAR_CFG_ENABLE_ID) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_DEF_ALL)
 /**
@@ -1917,7 +1916,7 @@ static void par_shell_cmd_def_all(const int argc)
         par_shell_print_status("par_def_all", status);
     }
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_DEF_ALL) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_SAVE) && (1 == PAR_CFG_NVM_EN)
 /**
@@ -1944,7 +1943,7 @@ static void par_shell_cmd_save(const int argc)
         par_shell_print_status("par_save", status);
     }
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SAVE) && (1 == PAR_CFG_NVM_EN) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_SAVE_CLEAN) && (1 == PAR_CFG_NVM_EN)
 /**
@@ -1971,7 +1970,7 @@ static void par_shell_cmd_save_clean(const int argc)
         par_shell_print_status("par_save_clean", status);
     }
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SAVE_CLEAN) && (1 == PAR_CFG_NVM_EN) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_JSON)
 /**
@@ -1986,7 +1985,7 @@ static void par_shell_cmd_json(void)
     for (par_num = 0U; par_num < ePAR_NUM_OF; par_num++)
     {
         const par_cfg_t *cfg = par_get_config(par_num);
-        par_type_t value = { 0 };
+        par_type_t value = {0};
         par_status_t value_status;
         char cur_buf[32];
         char def_buf[32];
@@ -2002,7 +2001,7 @@ static void par_shell_cmd_json(void)
         char write_roles_buf[48];
         const char *read_roles = "none";
         const char *write_roles = "none";
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
         unsigned int persistent = 0U;
 
         if (cfg == RT_NULL)
@@ -2010,39 +2009,38 @@ static void par_shell_cmd_json(void)
             continue;
         }
 
-
         value_status = par_shell_get_value(par_num, &value);
 #if (1 == PAR_CFG_ENABLE_ID)
         id = cfg->id;
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 #if (1 == PAR_CFG_ENABLE_NAME)
         if (cfg->name != RT_NULL)
         {
             name = cfg->name;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_NAME) */
 #if (1 == PAR_CFG_ENABLE_UNIT)
         if (cfg->unit != RT_NULL)
         {
             unit = cfg->unit;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_UNIT) */
 #if (1 == PAR_CFG_ENABLE_DESC)
         if (cfg->desc != RT_NULL)
         {
             desc = cfg->desc;
         }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_DESC) */
 #if (1 == PAR_CFG_ENABLE_ACCESS)
         access = par_shell_access_str(cfg->access);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ACCESS) */
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
         read_roles = par_shell_roles_to_cstr(cfg->read_roles, read_roles_buf, sizeof(read_roles_buf));
         write_roles = par_shell_roles_to_cstr(cfg->write_roles, write_roles_buf, sizeof(write_roles_buf));
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 #if (1 == PAR_CFG_NVM_EN)
         persistent = cfg->persistent ? 1U : 0U;
-#endif
+#endif /* (1 == PAR_CFG_NVM_EN) */
 
         if (false == first_item)
         {
@@ -2060,7 +2058,7 @@ static void par_shell_cmd_json(void)
         par_shell_json_print_escaped(read_roles);
         rt_kprintf("\",\"write_roles\":\"");
         par_shell_json_print_escaped(write_roles);
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
         rt_kprintf("\",\"persistent\":%u,\"unit\":\"", persistent);
         par_shell_json_print_escaped(unit);
         rt_kprintf("\",\"desc\":\"");
@@ -2077,11 +2075,11 @@ static void par_shell_cmd_json(void)
         rt_kprintf("\"}");
 #else
         rt_kprintf("\",\"min\":\"\",\"max\":\"\"}");
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
     }
     rt_kprintf("]}\n");
 }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_JSON) */
 
 /**
  * @brief Dispatch the top-level parameter shell command.
@@ -2113,7 +2111,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_info();
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_INFO) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID)
     if (strcmp(argv[1], "get") == 0)
@@ -2121,7 +2119,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_get(argc, argv);
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID)
     if (strcmp(argv[1], "set") == 0)
@@ -2129,7 +2127,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_set(argc, argv);
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID) */
 
 #if (1 == PAR_CFG_ENABLE_ROLE_POLICY)
     if (strcmp(argv[1], "role") == 0)
@@ -2137,7 +2135,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_role(argc, argv);
         return;
     }
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ROLE_POLICY) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_DEF) && (1 == PAR_CFG_ENABLE_ID)
     if (strcmp(argv[1], "def") == 0)
@@ -2145,7 +2143,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_def(argc, argv);
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_DEF) && (1 == PAR_CFG_ENABLE_ID) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_DEF_ALL)
     if (strcmp(argv[1], "def_all") == 0)
@@ -2153,7 +2151,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_def_all(argc);
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_DEF_ALL) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_SAVE) && (1 == PAR_CFG_NVM_EN)
     if (strcmp(argv[1], "save") == 0)
@@ -2161,7 +2159,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_save(argc);
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SAVE) && (1 == PAR_CFG_NVM_EN) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_SAVE_CLEAN) && (1 == PAR_CFG_NVM_EN)
     if (strcmp(argv[1], "save_clean") == 0)
@@ -2169,7 +2167,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_save_clean(argc);
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_SAVE_CLEAN) && (1 == PAR_CFG_NVM_EN) */
 
 #if defined(AUTOGEN_PM_MSH_CMD_JSON)
     if (strcmp(argv[1], "json") == 0)
@@ -2182,7 +2180,7 @@ static void par_msh(int argc, char **argv)
         par_shell_cmd_json();
         return;
     }
-#endif
+#endif /* defined(AUTOGEN_PM_MSH_CMD_JSON) */
 
     rt_kprintf("ERR, unknown subcmd: %s\n", argv[1]);
     par_shell_print_usage();
@@ -2190,4 +2188,4 @@ static void par_msh(int argc, char **argv)
 
 MSH_CMD_EXPORT_ALIAS(par_msh, par, parameter manager shell tool)
 
-#endif
+#endif /* defined(AUTOGEN_PM_USING_MSH_TOOL) && defined(RT_USING_FINSH) */

@@ -87,4 +87,4 @@ uint16_t par_if_crc16_accumulate(uint16_t crc, const uint8_t * const p_data, con
  */
 uint8_t par_if_crc8_accumulate(uint8_t crc, const uint8_t * const p_data, const uint32_t size);
 
-#endif /* _PAR_IF_H_ */
+#endif /* !defined(_PAR_IF_H_) */

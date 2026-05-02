@@ -30,4 +30,4 @@
  */
 uint32_t par_nvm_table_id_calc_for_count(uint16_t persistent_count);
 
-#endif /* _PAR_NVM_TABLE_ID_H_ */
+#endif /* !defined(_PAR_NVM_TABLE_ID_H_) */

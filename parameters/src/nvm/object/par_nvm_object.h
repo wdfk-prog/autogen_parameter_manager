@@ -186,4 +186,4 @@ par_status_t par_nvm_object_write_all(const par_store_backend_api_t * const p_st
                                       const uint32_t base_addr);
 #endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
-#endif /* _PAR_NVM_OBJECT_H_ */
+#endif /* !defined(_PAR_NVM_OBJECT_H_) */

@@ -24,7 +24,7 @@
  */
 #ifndef PAR_CFG_NVM_EN
 #define PAR_CFG_NVM_EN (1)
-#endif
+#endif /* !defined(PAR_CFG_NVM_EN) */
 
 /**
  * @brief Enable/Disable managed persistence for scalar parameters.
@@ -36,7 +36,7 @@
  */
 #ifndef PAR_CFG_NVM_SCALAR_EN
 #define PAR_CFG_NVM_SCALAR_EN (PAR_CFG_NVM_EN)
-#endif /* PAR_CFG_NVM_SCALAR_EN */
+#endif /* !defined(PAR_CFG_NVM_SCALAR_EN) */
 
 /**
  * @brief Enable/Disable the legacy GeneralEmbeddedCLibraries/nvm backend.
@@ -46,7 +46,7 @@
  */
 #ifndef PAR_CFG_NVM_BACKEND_GEL_EN
 #define PAR_CFG_NVM_BACKEND_GEL_EN (0)
-#endif
+#endif /* !defined(PAR_CFG_NVM_BACKEND_GEL_EN) */
 
 /**
  * @brief Enable/Disable parameter-table compatibility checking.
@@ -72,7 +72,7 @@
  */
 #ifndef PAR_CFG_TABLE_ID_CHECK_EN
 #define PAR_CFG_TABLE_ID_CHECK_EN (0)
-#endif
+#endif /* !defined(PAR_CFG_TABLE_ID_CHECK_EN) */
 
 /**
  * @brief Parameter-table ID schema version.
@@ -83,7 +83,7 @@
  */
 #ifndef PAR_CFG_TABLE_ID_SCHEMA_VER
 #define PAR_CFG_TABLE_ID_SCHEMA_VER (1U)
-#endif
+#endif /* !defined(PAR_CFG_TABLE_ID_SCHEMA_VER) */
 
 #include "nvm/backend/par_store_backend_flash_ee_cfg.h"
 
@@ -96,7 +96,7 @@
  */
 #ifndef PAR_CFG_NVM_WRITE_VERIFY_EN
 #define PAR_CFG_NVM_WRITE_VERIFY_EN (0)
-#endif
+#endif /* !defined(PAR_CFG_NVM_WRITE_VERIFY_EN) */
 
 /**
  * @brief Enable/Disable managed persistence for object parameters.
@@ -107,7 +107,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_EN
 #define PAR_CFG_NVM_OBJECT_EN (0)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_EN) */
 
 /**
  * @brief Use the same backend and address space for scalar and object persistence.
@@ -118,7 +118,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_STORE_SHARED
 #define PAR_CFG_NVM_OBJECT_STORE_SHARED (0U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_STORE_SHARED) */
 
 /**
  * @brief Use a dedicated object backend or partition for object persistence.
@@ -131,7 +131,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_STORE_DEDICATED
 #define PAR_CFG_NVM_OBJECT_STORE_DEDICATED (1U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_STORE_DEDICATED) */
 
 /**
  * @brief Select the object persistence storage target.
@@ -143,7 +143,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_STORE_MODE
 #define PAR_CFG_NVM_OBJECT_STORE_MODE PAR_CFG_NVM_OBJECT_STORE_SHARED
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_STORE_MODE) */
 
 /**
  * @brief Place the object persistence block immediately after the scalar NVM block.
@@ -158,7 +158,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR
 #define PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR (0U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR) */
 
 /**
  * @brief Place the object persistence block at a fixed configured backend address.
@@ -169,7 +169,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_ADDR_FIXED
 #define PAR_CFG_NVM_OBJECT_ADDR_FIXED (1U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_ADDR_FIXED) */
 
 /**
  * @brief Select object persistence block address placement mode.
@@ -181,7 +181,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_ADDR_MODE
 #define PAR_CFG_NVM_OBJECT_ADDR_MODE PAR_CFG_NVM_OBJECT_ADDR_AFTER_SCALAR
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_ADDR_MODE) */
 
 /**
  * @brief Fixed object persistence block base address in backend address space.
@@ -192,7 +192,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_FIXED_ADDR
 #define PAR_CFG_NVM_OBJECT_FIXED_ADDR (0U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_FIXED_ADDR) */
 
 /**
  * @brief Optional reserved size for the fixed object persistence region.
@@ -203,7 +203,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_REGION_SIZE
 #define PAR_CFG_NVM_OBJECT_REGION_SIZE (0U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_REGION_SIZE) */
 
 /**
  * @brief Base address of the object block in a dedicated object backend.
@@ -215,7 +215,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_DEDICATED_BASE_ADDR
 #define PAR_CFG_NVM_OBJECT_DEDICATED_BASE_ADDR (0U)
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_DEDICATED_BASE_ADDR) */
 
 /**
  * @brief Enable/Disable write-path readback verification for object records.
@@ -225,7 +225,7 @@
  */
 #ifndef PAR_CFG_NVM_OBJECT_WRITE_VERIFY_EN
 #define PAR_CFG_NVM_OBJECT_WRITE_VERIFY_EN PAR_CFG_NVM_WRITE_VERIFY_EN
-#endif
+#endif /* !defined(PAR_CFG_NVM_OBJECT_WRITE_VERIFY_EN) */
 
 /**
  * @brief Select persisted record layout.
@@ -241,7 +241,7 @@
 
 #ifndef PAR_CFG_NVM_RECORD_LAYOUT
 #define PAR_CFG_NVM_RECORD_LAYOUT (PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_WITH_SIZE)
-#endif
+#endif /* !defined(PAR_CFG_NVM_RECORD_LAYOUT) */
 
 /**
  * @brief Derived layout capability: serialized records store a parameter ID.
@@ -252,7 +252,7 @@
 #define PAR_CFG_NVM_RECORD_LAYOUT_HAS_STORED_ID (1)
 #else
 #define PAR_CFG_NVM_RECORD_LAYOUT_HAS_STORED_ID (0)
-#endif
+#endif /* (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_WITH_SIZE) || (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_NO_SIZE) || (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_COMPACT_PAYLOAD) */
 
 /**
  * @brief Derived layout capability: serialized records store a size descriptor.
@@ -262,6 +262,6 @@
 #define PAR_CFG_NVM_RECORD_LAYOUT_HAS_SIZE_DESC (1)
 #else
 #define PAR_CFG_NVM_RECORD_LAYOUT_HAS_SIZE_DESC (0)
-#endif
+#endif /* (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_WITH_SIZE) || (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_COMPACT_PAYLOAD) */
 
-#endif /* _PAR_NVM_CFG_H_ */
+#endif /* !defined(_PAR_NVM_CFG_H_) */

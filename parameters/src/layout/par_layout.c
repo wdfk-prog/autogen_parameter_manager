@@ -55,11 +55,11 @@ static const uint32_t *gsp_active_obj_pool_offset = gs_runtime_obj_pool_offset;
 #if (PAR_CFG_LAYOUT_SOURCE == PAR_CFG_LAYOUT_SCRIPT)
 #ifndef PAR_LAYOUT_STATIC_OFFSET_TABLE
 #error "PAR_LAYOUT_STATIC_OFFSET_TABLE must be provided by static layout include!"
-#endif
+#endif /* !defined(PAR_LAYOUT_STATIC_OFFSET_TABLE) */
 #if (PAR_LAYOUT_COMPILE_COUNTOBJ > 0u)
 #ifndef PAR_LAYOUT_STATIC_OBJECT_POOL_OFFSET_TABLE
 #error "PAR_LAYOUT_STATIC_OBJECT_POOL_OFFSET_TABLE must be provided when object rows are present!"
-#endif
+#endif /* !defined(PAR_LAYOUT_STATIC_OBJECT_POOL_OFFSET_TABLE) */
 #endif /* (PAR_LAYOUT_COMPILE_COUNTOBJ > 0u) */
 #endif /* (PAR_CFG_LAYOUT_SOURCE == PAR_CFG_LAYOUT_SCRIPT) */
 /**
@@ -99,7 +99,7 @@ void par_layout_init(void)
         case ePAR_TYPE_I32:
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
         case ePAR_TYPE_F32:
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
             gs_runtime_offset[par_it] = scan_count.count32;
             scan_count.count32++;
             break;
@@ -160,7 +160,7 @@ void par_layout_init(void)
 #endif /* (PAR_STORAGE_COUNTOBJ > 0u) */
     PAR_DBG_PRINT("PAR: layout initialized from generated static tables");
     return;
-#endif
+#endif /* (PAR_CFG_LAYOUT_SOURCE == PAR_CFG_LAYOUT_COMPILE_SCAN) */
 }
 /**
  * @brief Get active offset table pointer.

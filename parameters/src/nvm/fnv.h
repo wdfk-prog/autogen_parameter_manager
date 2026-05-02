@@ -25,4 +25,4 @@ typedef uint32_t Fnv32_t;
 Fnv32_t fnv_32a_buf(void *buf, size_t len, Fnv32_t hval);
 Fnv32_t fnv_32a_str(char *str, Fnv32_t hval);
 
-#endif /* _PAR_PERSIST_FNV_H_ */
+#endif /* !defined(_PAR_PERSIST_FNV_H_) */

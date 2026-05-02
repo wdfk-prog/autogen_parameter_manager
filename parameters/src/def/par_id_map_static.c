@@ -16,9 +16,16 @@
 
 #if (1 == PAR_CFG_ENABLE_ID)
 
+/**
+ * @brief Emit one static ID hash-map entry from a parameter table row.
+ * @param ... Parameter table row tuple from par_table.def.
+ */
 #define PAR_ID_MAP_ITEM(...) \
     [PAR_HASH_ID_CONST(PAR_XARG_ID(__VA_ARGS__))] = { .id = (uint16_t)(PAR_XARG_ID(__VA_ARGS__)), .par_num = (PAR_XARG_ENUM(__VA_ARGS__)), .used = 1u },
 
+/**
+ * @brief Static ID lookup table indexed by PAR_HASH_ID_CONST().
+ */
 const par_id_map_entry_t g_par_id_map_static[PAR_ID_HASH_SIZE] = {
 #define PAR_ITEM_NOP(...)
 #define PAR_ITEM_U8                      PAR_ID_MAP_ITEM
@@ -47,4 +54,4 @@ const par_id_map_entry_t g_par_id_map_static[PAR_ID_HASH_SIZE] = {
 
 #undef PAR_ID_MAP_ITEM
 
-#endif
+#endif /* (1 == PAR_CFG_ENABLE_ID) */

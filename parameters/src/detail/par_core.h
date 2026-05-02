@@ -104,12 +104,14 @@ bool par_core_scalar_validation_accepts(const par_num_t par_num, const par_type_
  * @param par_num Parameter number.
  * @param new_val New scalar value.
  * @param old_val Previous scalar value.
+ * @param p_value_changed Optional precomputed changed-state pointer.
  * @note Called from the checked scalar setter path after the live value has
  * been written, while the caller still owns the parameter lock.
  */
 void par_core_notify_scalar_change_if_changed(const par_num_t par_num,
                                               const par_type_t new_val,
-                                              const par_type_t old_val);
+                                              const par_type_t old_val,
+                                              const bool * const p_value_changed);
 #endif /* (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK) */
 
 #if (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
@@ -135,4 +137,4 @@ void par_core_register_obj_validation(const par_num_t par_num,
                                       const pf_par_obj_validation_t validation);
 #endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
-#endif /* _PAR_CORE_H_ */
+#endif /* !defined(_PAR_CORE_H_) */

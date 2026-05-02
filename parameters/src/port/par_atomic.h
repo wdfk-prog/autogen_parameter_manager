@@ -34,7 +34,7 @@
  * @brief Default atomic backend selection.
  */
 #define PAR_ATOMIC_BACKEND PAR_ATOMIC_BACKEND_C11
-#endif
+#endif /* !defined(PAR_ATOMIC_BACKEND) */
 
 /**
  * @brief Atomic shared-storage contract for backend implementers.
@@ -194,7 +194,7 @@ PAR_ATOMIC_FETCH_TYPE_LIST(PAR_ATOMIC_DEFINE_FETCH_OR)
 
 #error "Unsupported PAR_ATOMIC_BACKEND"
 
-#endif
+#endif /* (PAR_ATOMIC_BACKEND == PAR_ATOMIC_BACKEND_C11) */
 /**
  * @brief Load atomic value by type tag.
  *
@@ -232,4 +232,4 @@ PAR_ATOMIC_FETCH_TYPE_LIST(PAR_ATOMIC_DEFINE_FETCH_OR)
 #define PAR_ATOMIC_FETCH_OR(tag, ptr, value) \
     par_atomic_fetch_or_##tag((ptr), (value))
 
-#endif
+#endif /* !defined(PAR_ATOMIC_H) */

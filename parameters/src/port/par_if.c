@@ -288,7 +288,7 @@ void par_if_release_mutex(const par_num_t par_num)
     osMutexRelease(g_par_mutex_id);
 }
 
-#endif
+#endif /* (1 == PAR_CFG_IF_PORT_EN) */
 /**
  * @} <!-- END GROUP -->
  */

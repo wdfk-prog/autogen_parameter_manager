@@ -258,7 +258,7 @@ static bool par_nvm_layout_fixed_slot_with_size_data_obj_matches(const par_num_t
     memcpy(actual_payload, &p_actual->data, sizeof(p_actual->data));
     return (0 == memcmp(expected_payload, actual_payload, PAR_NVM_RECORD_DATA_SLOT_SIZE));
 }
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 
 /**
  * @brief Concrete layout adapter bound by the common NVM core.
@@ -274,7 +274,7 @@ static const par_nvm_layout_api_t g_par_nvm_layout_api = {
     .check_compat = par_nvm_layout_fixed_slot_with_size_check_compat,
 #if (1 == PAR_CFG_NVM_WRITE_VERIFY_EN)
     .data_obj_matches = par_nvm_layout_fixed_slot_with_size_data_obj_matches,
-#endif
+#endif /* (1 == PAR_CFG_NVM_WRITE_VERIFY_EN) */
 };
 
 /**
@@ -287,4 +287,4 @@ const par_nvm_layout_api_t *par_nvm_layout_init(void)
     return &g_par_nvm_layout_api;
 }
 
-#endif /* fixed-slot-with-size */
+#endif /* (1 == PAR_CFG_NVM_EN) && (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_WITH_SIZE) */

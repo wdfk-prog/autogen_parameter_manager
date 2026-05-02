@@ -229,8 +229,7 @@ static par_status_t par_store_rtt_at24_write(const uint32_t addr, const uint32_t
     while (remaining > 0u)
     {
         uint16_t xfer = (remaining > (uint32_t)AT24CXX_PAGE_BYTE) ? (uint16_t)AT24CXX_PAGE_BYTE : (uint16_t)remaining;
-        /**
-         * @note The AT24CXX write API accepts a non-const buffer pointer, but the
+        /* The AT24CXX write API accepts a non-const buffer pointer, but the
          * backend only passes source bytes for transmission and does not expect the
          * driver to modify them. Cast away constness locally to match the driver
          * signature and avoid an unnecessary temporary copy.

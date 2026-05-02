@@ -31,7 +31,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* defined(__cplusplus) */
 
 /**
  * @brief Diagnose the latest flash-emulated EEPROM backend event.
@@ -291,8 +291,8 @@ const char *par_store_backend_flash_ee_get_diag_str(par_store_flash_ee_diag_t di
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* defined(__cplusplus) */
 
 #endif /* (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_BACKEND_FLASH_EE_EN) */
 
-#endif /* PAR_STORE_BACKEND_FLASH_EE_H */
+#endif /* !defined(PAR_STORE_BACKEND_FLASH_EE_H) */

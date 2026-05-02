@@ -90,6 +90,11 @@ static bool par_object_slot_range_is_valid(const par_obj_slot_t * const p_slot)
     return true;
 }
 
+/**
+ * @brief Report whether a parameter type is handled by object storage.
+ * @param type Parameter type tag.
+ * @return True when the type is a fixed-capacity object type.
+ */
 bool par_object_type_is_object(const par_type_list_t type)
 {
     switch (type)
@@ -116,6 +121,12 @@ bool par_object_type_is_object(const par_type_list_t type)
     }
 }
 
+/**
+ * @brief Validate an object payload length against object configuration.
+ * @param p_obj_cfg Object parameter configuration.
+ * @param len Payload length in bytes.
+ * @return True when the length is inside range and element-aligned.
+ */
 bool par_object_len_is_valid(const par_object_cfg_t * const p_obj_cfg,
                              const uint16_t len)
 {
@@ -135,6 +146,11 @@ bool par_object_len_is_valid(const par_object_cfg_t * const p_obj_cfg,
     return true;
 }
 
+/**
+ * @brief Validate default payload metadata for one object parameter.
+ * @param p_obj_cfg Object parameter configuration.
+ * @return True when default length, range, and source pointer are valid.
+ */
 bool par_object_default_cfg_is_valid(const par_object_cfg_t * const p_obj_cfg)
 {
     if (NULL == p_obj_cfg)
@@ -157,11 +173,20 @@ bool par_object_default_cfg_is_valid(const par_object_cfg_t * const p_obj_cfg)
     return true;
 }
 
+/**
+ * @brief Calculate object slot table storage size.
+ * @param object_count Number of object parameter slots.
+ * @return Required slot table size in bytes.
+ */
 uint32_t par_object_slot_table_bytes(const uint16_t object_count)
 {
     return (uint32_t)object_count * (uint32_t)sizeof(par_obj_slot_t);
 }
 
+/**
+ * @brief Initialize object slots and payload pool from par_table.def defaults.
+ * @return Operation status.
+ */
 par_status_t par_object_init_defaults_from_table(void)
 {
     uint32_t expected_pool_off = 0U;
@@ -233,12 +258,18 @@ par_status_t par_object_init_defaults_from_table(void)
 }
 
 #if (1 == PAR_CFG_ENABLE_RESET_ALL_RAW)
+/**
+ * @brief Snapshot current object defaults into the raw reset-all mirror.
+ */
 void par_object_snapshot_default_mirror(void)
 {
     memcpy(&gs_par_object_pool_default_mirror, &gs_par_object_pool, sizeof(gs_par_object_pool));
     memcpy(&gs_par_object_slots_default_mirror, &gs_par_object_slots, sizeof(gs_par_object_slots));
 }
 
+/**
+ * @brief Restore object payloads and slots from the raw reset-all mirror.
+ */
 void par_object_restore_default_mirror(void)
 {
     memcpy(&gs_par_object_pool, &gs_par_object_pool_default_mirror, sizeof(gs_par_object_pool));
@@ -246,6 +277,12 @@ void par_object_restore_default_mirror(void)
 }
 #endif /* (1 == PAR_CFG_ENABLE_RESET_ALL_RAW) */
 
+/**
+ * @brief Check whether source bytes overlap the internal object pool.
+ * @param p_data Source payload pointer.
+ * @param len Source payload length in bytes.
+ * @return True when the source range overlaps object backing storage.
+ */
 bool par_object_source_overlaps_pool(const uint8_t * const p_data,
                                      const uint16_t len)
 {
@@ -262,6 +299,14 @@ bool par_object_source_overlaps_pool(const uint8_t * const p_data,
     return ((src_start < pool_end) && (src_end > pool_start));
 }
 
+/**
+ * @brief Get a read-only view of one object payload window.
+ * @param par_num Parameter number.
+ * @param[out] pp_data Pointer receiving the payload address.
+ * @param[out] p_len Pointer receiving current payload length in bytes.
+ * @param[out] p_capacity Pointer receiving payload capacity in bytes.
+ * @return Operation status.
+ */
 par_status_t par_object_get_view(const par_num_t par_num,
                                  const uint8_t **pp_data,
                                  uint16_t * const p_len,
@@ -301,6 +346,13 @@ par_status_t par_object_get_view(const par_num_t par_num,
     return ePAR_OK;
 }
 
+/**
+ * @brief Get a mutable view of one object payload window.
+ * @param par_num Parameter number.
+ * @param[out] pp_data Pointer receiving the payload address.
+ * @param[out] p_capacity Pointer receiving payload capacity in bytes.
+ * @return Operation status.
+ */
 par_status_t par_object_get_mutable_view(const par_num_t par_num,
                                          uint8_t **pp_data,
                                          uint16_t * const p_capacity)
@@ -337,6 +389,13 @@ par_status_t par_object_get_mutable_view(const par_num_t par_num,
     return ePAR_OK;
 }
 
+/**
+ * @brief Commit a new current length for one object payload.
+ * @param par_num Parameter number.
+ * @param len New payload length in bytes.
+ * @param clear_tail True to clear bytes after the committed payload.
+ * @return Operation status.
+ */
 par_status_t par_object_commit_len(const par_num_t par_num,
                                    const uint16_t len,
                                    const bool clear_tail)
@@ -372,6 +431,13 @@ par_status_t par_object_commit_len(const par_num_t par_num,
     return ePAR_OK;
 }
 
+/**
+ * @brief Replace one object payload and commit its length.
+ * @param par_num Parameter number.
+ * @param p_data Source payload bytes.
+ * @param len Source payload length in bytes.
+ * @return Operation status.
+ */
 par_status_t par_object_write_payload(const par_num_t par_num,
                                       const uint8_t * const p_data,
                                       const uint16_t len)
@@ -422,6 +488,11 @@ par_status_t par_object_write_payload(const par_num_t par_num,
     return par_object_commit_len(par_num, len, false);
 }
 
+/**
+ * @brief Restore one object parameter to its configured default payload.
+ * @param par_num Parameter number.
+ * @return Operation status.
+ */
 par_status_t par_object_write_default(const par_num_t par_num)
 {
     const par_cfg_t *p_cfg = NULL;
@@ -445,6 +516,12 @@ par_status_t par_object_write_default(const par_num_t par_num)
                                     p_cfg->value_cfg.object.def.len);
 }
 
+/**
+ * @brief Compare one live object payload with its configured default.
+ * @param par_num Parameter number.
+ * @param[out] p_has_changed Pointer receiving the changed flag.
+ * @return Operation status.
+ */
 par_status_t par_object_payload_changed_from_default(const par_num_t par_num,
                                                      bool * const p_has_changed)
 {
@@ -498,6 +575,14 @@ par_status_t par_object_payload_changed_from_default(const par_num_t par_num,
 }
 
 #if (1 == PAR_CFG_NVM_EN)
+/**
+ * @brief Export a read-only object payload view for NVM persistence.
+ * @param par_num Parameter number.
+ * @param[out] pp_data Pointer receiving the payload address.
+ * @param[out] p_len Pointer receiving current payload length in bytes.
+ * @param[out] p_capacity Pointer receiving payload capacity in bytes.
+ * @return Operation status.
+ */
 par_status_t par_obj_nvm_export(const par_num_t par_num,
                                 const uint8_t **pp_data,
                                 uint16_t * const p_len,
@@ -506,6 +591,13 @@ par_status_t par_obj_nvm_export(const par_num_t par_num,
     return par_object_get_view(par_num, pp_data, p_len, p_capacity);
 }
 
+/**
+ * @brief Export a mutable object payload window for NVM restore.
+ * @param par_num Parameter number.
+ * @param[out] pp_data Pointer receiving the payload address.
+ * @param[out] p_capacity Pointer receiving payload capacity in bytes.
+ * @return Operation status.
+ */
 par_status_t par_obj_nvm_restore_window(const par_num_t par_num,
                                         uint8_t **pp_data,
                                         uint16_t * const p_capacity)
@@ -513,12 +605,25 @@ par_status_t par_obj_nvm_restore_window(const par_num_t par_num,
     return par_object_get_mutable_view(par_num, pp_data, p_capacity);
 }
 
+/**
+ * @brief Commit the length of a restored object payload.
+ * @param par_num Parameter number.
+ * @param len Restored payload length in bytes.
+ * @return Operation status.
+ */
 par_status_t par_obj_nvm_commit_restore(const par_num_t par_num,
                                         const uint16_t len)
 {
     return par_object_commit_len(par_num, len, true);
 }
 
+/**
+ * @brief Restore one object payload from NVM data.
+ * @param par_num Parameter number.
+ * @param p_data Restored payload bytes.
+ * @param len Restored payload length in bytes.
+ * @return Operation status.
+ */
 par_status_t par_obj_nvm_restore(const par_num_t par_num,
                                  const uint8_t * const p_data,
                                  const uint16_t len)

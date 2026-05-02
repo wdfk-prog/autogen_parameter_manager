@@ -94,6 +94,7 @@ The bundled `par_table.def` treats its object rows as optional examples and guar
 
 ## Documentation map
 
+- [Documentation overview](docs/overview.md) for reader paths and the maintained document set
 - [Getting started](docs/getting-started.md) for integration steps, required files, and first-use examples
 - [Architecture](docs/architecture.md) for storage model, validation flow, ID lookup, and layout design
 - [API reference](docs/api-reference.md) for the public API grouped by responsibility
@@ -116,10 +117,12 @@ The bundled `par_table.def` treats its object rows as optional examples and guar
 │   ├── CHANGE_LOG.md
 │   ├── docs/
 │   │   ├── DeviceParameter_VerificationReport.xlsx
+│   │   ├── overview.md
 │   │   ├── api-reference.md
 │   │   ├── architecture.md
 │   │   ├── flash-ee-backend-design.md
-│   │   └── getting-started.md
+│   │   ├── getting-started.md
+│   │   └── object-parameters.md
 │   ├── src/
 │   │   ├── par.c
 │   │   ├── par.h
@@ -177,6 +180,7 @@ This repository contains the reusable module core and templates. A real integrat
 
 ## When to read which document
 
+- Read [Documentation overview](docs/overview.md) when you need a map from reader goals to detailed documents.
 - Read [Getting started](docs/getting-started.md) when you are integrating the module into a project.
 - Read [Architecture](docs/architecture.md) when you need to understand how `par_table.def`, storage groups, layout, validation, or ID lookup work internally.
 - Read [API reference](docs/api-reference.md) when you already understand the model and only need function-level guidance.
