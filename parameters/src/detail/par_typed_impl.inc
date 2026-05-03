@@ -157,7 +157,7 @@
  * @param old_val Old scalar union value.
  */
 #define PAR_CHECKED_VALUE_CHANGED_f32(new_val, old_val) \
-    (!par_core_f32_bits_equal((new_val).f32, (old_val).f32))
+    (!par_core_scalar_f32_bits_equal((new_val).f32, (old_val).f32))
 /**
  * @brief Dispatch scalar union comparison by field name.
  * @param FIELD par_type_t union field.
@@ -386,7 +386,7 @@ static par_status_t par_validate_expected_type(const par_cfg_t * const p_cfg,
  *
  * @note Exactly one value source shall be provided:
  * - p_typed_val: used by typed setters par_set_xxx().
- * - p_ptr_val : used by generic par_set().
+ * - p_ptr_val : used by generic par_set_scalar().
  *
  * @note Unchecked internal paths such as par_set_xxx_fast(), NVM restore
  * helpers, and other explicit fast paths do not call this function.

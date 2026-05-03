@@ -12,7 +12,7 @@
  * Date       Version Author        Description
  * 2026-03-29 1.0     wdfk-prog    first version
  */
-#include "../parameters/src/par_cfg.h"
+#include "par_cfg.h"
 #include "../parameters/src/nvm/backend/par_store_backend.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_BACKEND_RTT_AT24CXX_EN)

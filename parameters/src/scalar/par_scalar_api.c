@@ -188,7 +188,7 @@ void par_core_scalar_snapshot_default_mirror(void)
  *
  * @code
  * float32_t my_val = 1.234f;.
- * par_set( ePAR_MY_VAR, (float32_t*) &my_val );.
+ * par_set_scalar( ePAR_MY_VAR, (float32_t*) &my_val );.
  * @endcode
  *
  * @note Input is the internal parameter number (`par_num_t`) from `par_def.h`,
@@ -198,7 +198,7 @@ void par_core_scalar_snapshot_default_mirror(void)
  * @param p_val Pointer to value.
  * @return Status of operation.
  */
-par_status_t par_set(const par_num_t par_num, const void *p_val)
+par_status_t par_set_scalar(const par_num_t par_num, const void *p_val)
 {
     const par_cfg_t *par_cfg = NULL;
     const par_status_t status = par_core_resolve_runtime(par_num, p_val, true, &par_cfg);
@@ -223,7 +223,7 @@ par_status_t par_set(const par_num_t par_num, const void *p_val)
  * @param p_val Pointer to value.
  * @return Status of operation.
  */
-par_status_t par_set_fast(const par_num_t par_num, const void *p_val)
+par_status_t par_set_scalar_fast(const par_num_t par_num, const void *p_val)
 {
     const par_cfg_t *par_cfg = NULL;
     const par_status_t status = par_core_resolve_runtime(par_num, p_val, true, &par_cfg);
@@ -294,7 +294,7 @@ par_status_t par_set_fast(const par_num_t par_num, const void *p_val)
  * @note Object-backed rows are not supported by this generic ID-based setter.
  */
 #if (1 == PAR_CFG_ENABLE_ID)
-par_status_t par_set_by_id(const uint16_t id, const void *p_val)
+par_status_t par_set_scalar_by_id(const uint16_t id, const void *p_val)
 {
     par_num_t par_num = 0U;
     const par_status_t status = par_get_num_by_id(id, &par_num);
@@ -304,7 +304,7 @@ par_status_t par_set_by_id(const uint16_t id, const void *p_val)
         return status;
     }
 
-    return par_set(par_num, p_val);
+    return par_set_scalar(par_num, p_val);
 }
 #endif /* (1 == PAR_CFG_ENABLE_ID) */
 #if (1 == PAR_CFG_ENABLE_RESET_ALL_RAW)
@@ -350,7 +350,7 @@ par_status_t par_reset_all_to_default_raw(void)
  *
  * @code
  * float32_t my_val = 0.0f;.
- * par_get( ePAR_MY_VAR, (float32_t*) &my_val );.
+ * par_get_scalar( ePAR_MY_VAR, (float32_t*) &my_val );.
  * @endcode
  *
  * @note Input is the internal parameter number (`par_num_t`) from `par_def.h`,
@@ -360,7 +360,7 @@ par_status_t par_reset_all_to_default_raw(void)
  * @param p_val Parameter value.
  * @return Status of operation.
  */
-par_status_t par_get(const par_num_t par_num, void * const p_val)
+par_status_t par_get_scalar(const par_num_t par_num, void * const p_val)
 {
     const par_cfg_t *par_cfg = NULL;
     par_status_t status = ePAR_OK;
@@ -437,7 +437,7 @@ par_status_t par_get(const par_num_t par_num, void * const p_val)
  * @note Object-backed rows are not supported by this generic ID-based getter.
  */
 #if (1 == PAR_CFG_ENABLE_ID)
-par_status_t par_get_by_id(const uint16_t id, void * const p_val)
+par_status_t par_get_scalar_by_id(const uint16_t id, void * const p_val)
 {
     par_num_t par_num = 0U;
     const par_status_t status = par_get_num_by_id(id, &par_num);
@@ -447,7 +447,7 @@ par_status_t par_get_by_id(const uint16_t id, void * const p_val)
         return status;
     }
 
-    return par_get(par_num, p_val);
+    return par_get_scalar(par_num, p_val);
 }
 #endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
@@ -456,7 +456,7 @@ par_status_t par_get_by_id(const uint16_t id, void * const p_val)
  * @param p_val Parameter default value.
  * @return Status of operation.
  */
-par_status_t par_get_default(const par_num_t par_num, void * const p_val)
+par_status_t par_get_scalar_default(const par_num_t par_num, void * const p_val)
 {
     const par_cfg_t *par_cfg = NULL;
     par_status_t status = ePAR_OK;
@@ -567,7 +567,7 @@ par_status_t par_set_scalar_n_save(const par_num_t par_num, const void *p_val)
 #endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
     status = par_set_checked_core(par_num, par_cfg->type, NULL, p_val, &value_change);
-    /* Persist successful writes even when par_set reports a warning, such as
+    /* Persist successful writes even when par_set_scalar reports a warning, such as
      * range limiting. The changed flag is produced by the locked setter core
      * after it has written the actual live value. */
     if ((ePAR_OK == (status & ePAR_STATUS_ERROR_MASK)) && value_change)

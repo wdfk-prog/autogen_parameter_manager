@@ -285,7 +285,7 @@ void par_core_notify_scalar_change_if_changed(const par_num_t par_num,
 
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
         case ePAR_TYPE_F32:
-            value_changed = !par_core_f32_bits_equal(new_val.f32, old_val.f32);
+            value_changed = !par_core_scalar_f32_bits_equal(new_val.f32, old_val.f32);
             break;
 #endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 
@@ -351,7 +351,7 @@ void par_core_register_obj_validation(const par_num_t par_num,
 
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
 /**
- * @brief Compare two F32 values by raw bit pattern.
+ * @brief Compare two scalar F32 values by raw bit pattern.
  *
  * @note This helper intentionally uses memcpy() instead of pointer.
  * casting or union type-punning. memcpy() preserves the exact.
@@ -359,11 +359,11 @@ void par_core_register_obj_validation(const par_num_t par_num,
  * Bitwise comparison keeps NaN payloads and signed-zero handling.
  * deterministic for parameter storage use cases.
  *
- * @param lhs Left-hand float value.
- * @param rhs Right-hand float value.
+ * @param lhs Left-hand scalar float value.
+ * @param rhs Right-hand scalar float value.
  * @return true if raw 32-bit representations are equal.
  */
-bool par_core_f32_bits_equal(const float32_t lhs, const float32_t rhs)
+bool par_core_scalar_f32_bits_equal(const float32_t lhs, const float32_t rhs)
 {
     uint32_t lhs_bits = 0U;
     uint32_t rhs_bits = 0U;
@@ -891,7 +891,7 @@ par_status_t par_has_changed(const par_num_t par_num, bool * const p_has_changed
         const par_status_t status = par_get_f32(par_num, &cur);
         if (ePAR_OK != status)
             return status;
-        *p_has_changed = !par_core_f32_bits_equal(cur, par_cfg->value_cfg.scalar.def.f32);
+        *p_has_changed = !par_core_scalar_f32_bits_equal(cur, par_cfg->value_cfg.scalar.def.f32);
         break;
     }
 #endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */

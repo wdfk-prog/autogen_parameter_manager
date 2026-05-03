@@ -1317,19 +1317,19 @@ static par_status_t par_shell_get_value(const par_num_t par_num, par_type_t *con
     switch (type)
     {
     case ePAR_TYPE_U8:
-        return par_get(par_num, &p_value->u8);
+        return par_get_scalar(par_num, &p_value->u8);
     case ePAR_TYPE_U16:
-        return par_get(par_num, &p_value->u16);
+        return par_get_scalar(par_num, &p_value->u16);
     case ePAR_TYPE_U32:
-        return par_get(par_num, &p_value->u32);
+        return par_get_scalar(par_num, &p_value->u32);
     case ePAR_TYPE_I8:
-        return par_get(par_num, &p_value->i8);
+        return par_get_scalar(par_num, &p_value->i8);
     case ePAR_TYPE_I16:
-        return par_get(par_num, &p_value->i16);
+        return par_get_scalar(par_num, &p_value->i16);
     case ePAR_TYPE_I32:
-        return par_get(par_num, &p_value->i32);
+        return par_get_scalar(par_num, &p_value->i32);
     case ePAR_TYPE_F32:
-        return par_get(par_num, &p_value->f32);
+        return par_get_scalar(par_num, &p_value->f32);
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
 #if (1 == PAR_CFG_ENABLE_TYPE_STR)
     case ePAR_TYPE_STR:
@@ -1664,13 +1664,13 @@ static void par_shell_cmd_get(const int argc, char **argv)
         status = par_shell_print_object_get(target.par_num, par_get_type(target.par_num));
         if (status != ePAR_OK)
         {
-            par_shell_print_status("par_get", status);
+            par_shell_print_status("par_get_scalar", status);
         }
 #else
         status = par_shell_get_value(target.par_num, &value);
         if (status != ePAR_OK)
         {
-            par_shell_print_status("par_get", status);
+            par_shell_print_status("par_get_scalar", status);
         }
         else
         {
@@ -1688,7 +1688,7 @@ static void par_shell_cmd_get(const int argc, char **argv)
     }
     else
     {
-        par_shell_print_status("par_get", status);
+        par_shell_print_status("par_get_scalar", status);
     }
 }
 #endif /* defined(AUTOGEN_PM_MSH_CMD_GET) && (1 == PAR_CFG_ENABLE_ID) */
@@ -1745,25 +1745,25 @@ static void par_shell_cmd_set(const int argc, char **argv)
     switch (par_get_type(target.par_num))
     {
     case ePAR_TYPE_U8:
-        status = par_set(target.par_num, &value.u8);
+        status = par_set_scalar(target.par_num, &value.u8);
         break;
     case ePAR_TYPE_U16:
-        status = par_set(target.par_num, &value.u16);
+        status = par_set_scalar(target.par_num, &value.u16);
         break;
     case ePAR_TYPE_U32:
-        status = par_set(target.par_num, &value.u32);
+        status = par_set_scalar(target.par_num, &value.u32);
         break;
     case ePAR_TYPE_I8:
-        status = par_set(target.par_num, &value.i8);
+        status = par_set_scalar(target.par_num, &value.i8);
         break;
     case ePAR_TYPE_I16:
-        status = par_set(target.par_num, &value.i16);
+        status = par_set_scalar(target.par_num, &value.i16);
         break;
     case ePAR_TYPE_I32:
-        status = par_set(target.par_num, &value.i32);
+        status = par_set_scalar(target.par_num, &value.i32);
         break;
     case ePAR_TYPE_F32:
-        status = par_set(target.par_num, &value.f32);
+        status = par_set_scalar(target.par_num, &value.f32);
         break;
     default:
         status = ePAR_ERROR_TYPE;
@@ -1788,7 +1788,7 @@ static void par_shell_cmd_set(const int argc, char **argv)
     }
     else
     {
-        par_shell_print_status("par_set", status);
+        par_shell_print_status("par_set_scalar", status);
     }
 }
 #endif /* defined(AUTOGEN_PM_MSH_CMD_SET) && (1 == PAR_CFG_ENABLE_ID) */

@@ -132,7 +132,7 @@ typedef struct
 /**
  * @brief Number of scalar persisted records compiled into this build.
  */
-#define PAR_NVM_SCALAR_RECORD_COUNT  ((uint16_t)PAR_PERSISTENT_COMPILE_COUNT)
+#define PAR_NVM_SCALAR_RECORD_COUNT ((uint16_t)PAR_PERSISTENT_COMPILE_COUNT)
 #else
 /**
  * @brief Internal switch for scalar persisted-record support.
@@ -725,7 +725,7 @@ static par_status_t par_nvm_load_all(const uint16_t num_of_par)
             goto out;
         }
 
-        op_status = par_set_fast(par_num, &obj_data.data);
+        op_status = par_set_scalar_fast(par_num, &obj_data.data);
         if (ePAR_OK != op_status)
         {
             status |= op_status;
@@ -1254,7 +1254,7 @@ par_status_t par_nvm_write(const par_num_t par_num, const bool nvm_sync)
     par_status_t store_status = ePAR_OK;
 
     PAR_DBG_PRINT("PAR_NVM: writing persistent parameter, par_num=%u id=%u", (unsigned)par_num, (unsigned)PAR_NVM_CFG_ID_VALUE(par_cfg));
-    status = par_get(par_num, &live_data);
+    status = par_get_scalar(par_num, &live_data);
     if (ePAR_OK != status)
     {
         PAR_ERR_PRINT("PAR_NVM: failed to read live value before write, par_num=%u id=%u err=%u",

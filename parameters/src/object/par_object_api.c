@@ -17,6 +17,19 @@
 #endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
+#if (1 == PAR_CFG_ENABLE_ID)
+/**
+ * @brief Resolve an external object parameter ID to an internal parameter number.
+ * @param id External parameter ID.
+ * @param[out] p_par_num Pointer to the resolved parameter number.
+ * @return Operation status.
+ */
+static par_status_t par_object_resolve_id(const uint16_t id,
+                                          par_num_t * const p_par_num)
+{
+    return par_get_num_by_id(id, p_par_num);
+}
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 /**
  * @brief Set one object parameter through the shared checked object path.
  * @details Object setters support validation callbacks only; object on-change
@@ -225,9 +238,9 @@ static par_status_t par_get_array_runtime_core(const par_num_t par_num,
     const par_cfg_t *par_cfg = NULL;
     const uint8_t *p_payload = NULL;
     const par_status_t status = par_core_resolve_runtime(par_num,
-                                                    (NULL != p_buf) ? p_buf : (void *)p_out_count,
-                                                    ((NULL == p_buf) && (NULL == p_out_count)),
-                                                    &par_cfg);
+                                                         (NULL != p_buf) ? p_buf : (void *)p_out_count,
+                                                         ((NULL == p_buf) && (NULL == p_out_count)),
+                                                         &par_cfg);
     uint16_t len = 0U;
     uint16_t capacity = 0U;
     uint16_t count = 0U;
@@ -309,9 +322,9 @@ static par_status_t par_get_array_default_core(const par_num_t par_num,
 {
     const par_cfg_t *par_cfg = NULL;
     const par_status_t status = par_core_resolve_metadata(par_num,
-                                                     (NULL != p_buf) ? p_buf : (void *)p_out_count,
-                                                     ((NULL == p_buf) && (NULL == p_out_count)),
-                                                     &par_cfg);
+                                                          (NULL != p_buf) ? p_buf : (void *)p_out_count,
+                                                          ((NULL == p_buf) && (NULL == p_out_count)),
+                                                          &par_cfg);
     uint16_t count = 0U;
 
     if (ePAR_OK != status)
@@ -745,6 +758,425 @@ par_status_t par_get_default_arr_u32(const par_num_t par_num, uint32_t *p_buf, c
 #endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U32) */
 
 
+#if (1 == PAR_CFG_ENABLE_ID)
+#if (1 == PAR_CFG_ENABLE_TYPE_BYTES)
+/**
+ * @brief Set one fixed-capacity raw byte-array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_data Pointer to the source bytes.
+ * @param len Payload length in bytes.
+ * @return Operation status.
+ */
+par_status_t par_set_bytes_by_id(const uint16_t id,
+                                 const uint8_t *p_data,
+                                 const uint16_t len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_set_bytes(par_num, p_data, len);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_BYTES) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_BYTES)
+/**
+ * @brief Read one fixed-capacity raw byte-array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_size Destination buffer size in bytes.
+ * @param[out] p_out_len Pointer to the returned payload length in bytes.
+ * @return Operation status.
+ */
+par_status_t par_get_bytes_by_id(const uint16_t id,
+                                 uint8_t *p_buf,
+                                 const uint16_t buf_size,
+                                 uint16_t *p_out_len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_bytes(par_num, p_buf, buf_size, p_out_len);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_BYTES) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_STR)
+/**
+ * @brief Set one fixed-capacity string parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_str Pointer to a NUL-terminated source string, or NULL
+ * for an empty string.
+ * @return Operation status.
+ */
+par_status_t par_set_str_by_id(const uint16_t id, const char *p_str)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_set_str(par_num, p_str);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_STR) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_STR)
+/**
+ * @brief Read one fixed-capacity string parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination character buffer.
+ * @param buf_size Destination buffer size in bytes, including the trailing NUL.
+ * @param[out] p_out_len Pointer to the returned string length without the trailing NUL.
+ * @return Operation status.
+ */
+par_status_t par_get_str_by_id(const uint16_t id,
+                               char *p_buf,
+                               const uint16_t buf_size,
+                               uint16_t *p_out_len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_str(par_num, p_buf, buf_size, p_out_len);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_STR) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U8)
+/**
+ * @brief Set one fixed-size unsigned 8-bit array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_data Pointer to the source elements.
+ * @param count Number of source elements.
+ * @return Operation status.
+ */
+par_status_t par_set_arr_u8_by_id(const uint16_t id,
+                                  const uint8_t *p_data,
+                                  const uint16_t count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_set_arr_u8(par_num, p_data, count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U8) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U8)
+/**
+ * @brief Read one fixed-size unsigned 8-bit array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_count Destination capacity in elements.
+ * @param[out] p_out_count Pointer to the returned element count.
+ * @return Operation status.
+ */
+par_status_t par_get_arr_u8_by_id(const uint16_t id,
+                                  uint8_t *p_buf,
+                                  const uint16_t buf_count,
+                                  uint16_t *p_out_count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_arr_u8(par_num, p_buf, buf_count, p_out_count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U8) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U16)
+/**
+ * @brief Set one fixed-size unsigned 16-bit array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_data Pointer to the source elements.
+ * @param count Number of source elements.
+ * @return Operation status.
+ */
+par_status_t par_set_arr_u16_by_id(const uint16_t id,
+                                   const uint16_t *p_data,
+                                   const uint16_t count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_set_arr_u16(par_num, p_data, count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U16) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U16)
+/**
+ * @brief Read one fixed-size unsigned 16-bit array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_count Destination capacity in elements.
+ * @param[out] p_out_count Pointer to the returned element count.
+ * @return Operation status.
+ */
+par_status_t par_get_arr_u16_by_id(const uint16_t id,
+                                   uint16_t *p_buf,
+                                   const uint16_t buf_count,
+                                   uint16_t *p_out_count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_arr_u16(par_num, p_buf, buf_count, p_out_count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U16) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U32)
+/**
+ * @brief Set one fixed-size unsigned 32-bit array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_data Pointer to the source elements.
+ * @param count Number of source elements.
+ * @return Operation status.
+ */
+par_status_t par_set_arr_u32_by_id(const uint16_t id,
+                                   const uint32_t *p_data,
+                                   const uint16_t count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_set_arr_u32(par_num, p_data, count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U32) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U32)
+/**
+ * @brief Read one fixed-size unsigned 32-bit array parameter by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_count Destination capacity in elements.
+ * @param[out] p_out_count Pointer to the returned element count.
+ * @return Operation status.
+ */
+par_status_t par_get_arr_u32_by_id(const uint16_t id,
+                                   uint32_t *p_buf,
+                                   const uint16_t buf_count,
+                                   uint16_t *p_out_count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_arr_u32(par_num, p_buf, buf_count, p_out_count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U32) */
+
+/**
+ * @brief Return the current payload length of one object parameter by external ID.
+ * @param id External parameter ID.
+ * @param[out] p_len Pointer to the returned payload length in bytes.
+ * @return Operation status.
+ */
+par_status_t par_get_obj_len_by_id(const uint16_t id, uint16_t *p_len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_obj_len(par_num, p_len);
+}
+
+/**
+ * @brief Return the configured object payload capacity by external ID.
+ * @param id External parameter ID.
+ * @param[out] p_capacity Pointer to the returned payload capacity in bytes.
+ * @return Operation status.
+ */
+par_status_t par_get_obj_capacity_by_id(const uint16_t id, uint16_t *p_capacity)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_obj_capacity(par_num, p_capacity);
+}
+
+#if (1 == PAR_CFG_ENABLE_TYPE_BYTES)
+/**
+ * @brief Read the default byte-array payload by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_size Destination buffer size in bytes.
+ * @param[out] p_out_len Pointer to the returned default payload length in bytes.
+ * @return Operation status.
+ */
+par_status_t par_get_default_bytes_by_id(const uint16_t id,
+                                         uint8_t *p_buf,
+                                         const uint16_t buf_size,
+                                         uint16_t *p_out_len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_default_bytes(par_num, p_buf, buf_size, p_out_len);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_BYTES) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_STR)
+/**
+ * @brief Read the default string payload by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination character buffer.
+ * @param buf_size Destination buffer size in bytes, including the trailing NUL.
+ * @param[out] p_out_len Pointer to the returned default string length without the trailing NUL.
+ * @return Operation status.
+ */
+par_status_t par_get_default_str_by_id(const uint16_t id,
+                                       char *p_buf,
+                                       const uint16_t buf_size,
+                                       uint16_t *p_out_len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_default_str(par_num, p_buf, buf_size, p_out_len);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_STR) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U8)
+/**
+ * @brief Read the default unsigned 8-bit array payload by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_count Destination capacity in elements.
+ * @param[out] p_out_count Pointer to the returned element count.
+ * @return Operation status.
+ */
+par_status_t par_get_default_arr_u8_by_id(const uint16_t id,
+                                          uint8_t *p_buf,
+                                          const uint16_t buf_count,
+                                          uint16_t *p_out_count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_default_arr_u8(par_num, p_buf, buf_count, p_out_count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U8) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U16)
+/**
+ * @brief Read the default unsigned 16-bit array payload by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_count Destination capacity in elements.
+ * @param[out] p_out_count Pointer to the returned element count.
+ * @return Operation status.
+ */
+par_status_t par_get_default_arr_u16_by_id(const uint16_t id,
+                                           uint16_t *p_buf,
+                                           const uint16_t buf_count,
+                                           uint16_t *p_out_count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_default_arr_u16(par_num, p_buf, buf_count, p_out_count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U16) */
+
+#if (1 == PAR_CFG_ENABLE_TYPE_ARR_U32)
+/**
+ * @brief Read the default unsigned 32-bit array payload by external ID.
+ * @param id External parameter ID.
+ * @param p_buf Pointer to the destination buffer.
+ * @param buf_count Destination capacity in elements.
+ * @param[out] p_out_count Pointer to the returned element count.
+ * @return Operation status.
+ */
+par_status_t par_get_default_arr_u32_by_id(const uint16_t id,
+                                           uint32_t *p_buf,
+                                           const uint16_t buf_count,
+                                           uint16_t *p_out_count)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_get_default_arr_u32(par_num, p_buf, buf_count, p_out_count);
+}
+#endif /* (1 == PAR_CFG_ENABLE_TYPE_ARR_U32) */
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
+
+
 #if (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
 /**
  * @brief Set one object payload and save to NVM if changed.
@@ -857,6 +1289,29 @@ out:
 
     return status;
 }
+#if (1 == PAR_CFG_ENABLE_ID)
+/**
+ * @brief Set one object payload by external ID and persist it if changed.
+ * @param id External parameter ID.
+ * @param p_data Pointer to payload bytes, or NULL when len is zero.
+ * @param len Payload length in bytes.
+ * @return Operation status. Returns ePAR_ERROR_TYPE for scalar rows.
+ */
+par_status_t par_set_obj_n_save_by_id(const uint16_t id,
+                                      const uint8_t *p_data,
+                                      const uint16_t len)
+{
+    par_num_t par_num = 0U;
+    const par_status_t status = par_object_resolve_id(id, &par_num);
+
+    if (ePAR_OK != status)
+    {
+        return status;
+    }
+
+    return par_set_obj_n_save(par_num, p_data, len);
+}
+#endif /* (1 == PAR_CFG_ENABLE_ID) */
 #endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
 #if (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)

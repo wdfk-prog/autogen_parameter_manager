@@ -23,6 +23,7 @@ if GetDepend('AUTOGEN_PM_USING_MSH_TOOL'):
 path = [
     cwd,
     cwd + '/port',
+    cwd + '/parameters/include',
     cwd + '/parameters/src',
     cwd + '/parameters/src/def',
     cwd + '/parameters/src/layout',

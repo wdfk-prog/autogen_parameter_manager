@@ -84,7 +84,7 @@ PAR_ITEM_ARR_U16(ePAR_LUT, 50004, "U16 LUT", 3U, 3U,
                  "Fixed-size lookup table")
 ```
 
-Object rows use the shared object pool plus one runtime slot per parameter. They remain RAM-only by default, but object rows with `pers_ = 1` can be stored in the dedicated object persistence block when `PAR_CFG_NVM_OBJECT_EN = 1` and `PAR_CFG_ENABLE_ID = 1`. Object rows use only the dedicated object typed APIs; they do not use generic or ID-based get/set paths. For `STR`, `max_len_` is the stored payload capacity and does not include the trailing NUL required by `par_get_str()` destination buffers.
+Object rows use the shared object pool plus one runtime slot per parameter. They remain RAM-only by default, but object rows with `pers_ = 1` can be stored in the dedicated object persistence block when `PAR_CFG_NVM_OBJECT_EN = 1` and `PAR_CFG_ENABLE_ID = 1`. Object rows use dedicated object typed APIs by parameter number or external ID; they do not use generic scalar get/set paths. For `STR`, `max_len_` is the stored payload capacity and does not include the trailing NUL required by `par_get_str()` destination buffers.
 
 If you keep role policy disabled, use `ePAR_ROLE_ALL` / `ePAR_ROLE_NONE` as neutral placeholders in the extra role columns, or keep the template defaults and leave enforcement to the access bit only.
 
@@ -107,7 +107,7 @@ In production tables, keep that guard only for optional sample/demo rows. Unguar
 
 ### `port/par_cfg_port.h`
 
-`src/par_cfg.h` includes `par_cfg_port.h` unconditionally.
+`include/par_cfg.h` includes `par_cfg_port.h` unconditionally.
 
 If you do not need platform overrides yet, start with a minimal stub:
 
@@ -120,7 +120,7 @@ If you do not need platform overrides yet, start with a minimal stub:
 
 Use `template/par_cfg_port.htmp` as the starting point.
 
-Keep `parameters/src` on the compiler include path so application code can include `par.h`. Also add the directory that contains your integration-owned `par_cfg_port.h` (and optionally `par_atomic_port.h`) to the compiler include path.
+Keep `parameters/include` on the compiler include path so application code can include `par.h`. Also keep `parameters/src` on the include path because `include/par_cfg.h` still pulls generated and packaged configuration headers through `def/par_def.h` and `nvm/par_nvm_cfg.h`. The packaged SConscript already adds both paths; custom standalone builds must add them explicitly. Also add the directory that contains your integration-owned `par_cfg_port.h` (and optionally `par_atomic_port.h`) to the compiler include path.
 
 ## Optional integration files
 
@@ -135,7 +135,7 @@ Use it to integrate platform-specific services such as:
 - mutex handling
 - optional platform hooks unrelated to the core ID lookup hash map
 
-The ID lookup hash used by the scalar-only `par_get_by_id()` / `par_set_by_id()` wrappers is part of the core module and is generated at compile time, not supplied by `port/par_if_port.c`.
+The ID lookup hash used by scalar and object `*_by_id()` wrappers is part of the core module and is generated at compile time, not supplied by `port/par_if_port.c`.
 Do not confuse it with optional table-hash support used by NVM compatibility features.
 
 ### `port/par_atomic_port.h`
@@ -330,10 +330,10 @@ uint16_t pwm_limit = 0U;
 
 ```c
 float32_t value = 12.0f;
-(void)par_set(ePAR_TARGET_TEMP, &value);
+(void)par_set_scalar(ePAR_TARGET_TEMP, &value);
 
 float32_t readback = 0.0f;
-(void)par_get(ePAR_TARGET_TEMP, &readback);
+(void)par_get_scalar(ePAR_TARGET_TEMP, &readback);
 ```
 
 ## Registering callbacks and validation
@@ -413,7 +413,7 @@ Fast setters are meant for controlled hot paths where you accept reduced safety 
 When you only have a typed value pointer and still want the unchecked path, use the generic fast dispatcher:
 ```c
 float32_t value = 12.0f;
-(void)par_set_fast(ePAR_TARGET_TEMP, &value);
+(void)par_set_scalar_fast(ePAR_TARGET_TEMP, &value);
 ```
 
 Do not use fast setters as the default API for ordinary application code.
@@ -481,7 +481,7 @@ def.h:124:51: error: size of array '_static_assert_ePAR_SYS_CPU_LOAD_MAX_f32_typ
 port/par_cfg_port.h:130:44: note: in expansion of macro '_STATIC_ASSERT'
   130 | #define PAR_PORT_STATIC_ASSERT(name, expn) _STATIC_ASSERT(name, expn)
       |                                            ^~~~~~~~~~~~~~~~
-src/par_cfg.h:160:53: note: in expansion of macro 'PAR_PORT_STATIC_ASSERT'
+include/par_cfg.h:160:53: note: in expansion of macro 'PAR_PORT_STATIC_ASSERT'
   160 | #define PAR_STATIC_ASSERT(name, expn)               PAR_PORT_STATIC_ASSERT(name, expn);
       |                                                     ^~~~~~~~~~~~~~~~~~~~~~
 src/def/par_def.c:73:94: note: in expansion of macro 'PAR_STATIC_ASSERT'

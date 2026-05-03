@@ -63,13 +63,13 @@ bool par_core_access_has_write(const par_access_t access);
 
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)
 /**
- * @brief Compare two F32 values by raw bit pattern.
+ * @brief Compare two scalar F32 values by raw bit pattern.
  *
- * @param lhs Left-hand float value.
- * @param rhs Right-hand float value.
+ * @param lhs Left-hand scalar float value.
+ * @param rhs Right-hand scalar float value.
  * @return true if raw 32-bit representations are equal.
  */
-bool par_core_f32_bits_equal(const float32_t lhs, const float32_t rhs);
+bool par_core_scalar_f32_bits_equal(const float32_t lhs, const float32_t rhs);
 #endif /* (1 == PAR_CFG_ENABLE_TYPE_F32) */
 
 #if (1 == PAR_CFG_ENABLE_TYPE_F32)

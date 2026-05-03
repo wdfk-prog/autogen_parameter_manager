@@ -256,10 +256,10 @@ Compatibility is intentionally conservative. The object table-ID digest covers t
 
 Firmware-level object payload read/write is handled by the dedicated object typed APIs.
 
-- supported firmware APIs: `par_set_str()` / `par_get_str()`, `par_set_bytes()` / `par_get_bytes()`, `par_set_arr_*()` / `par_get_arr_*()`, `par_get_obj_len()`, `par_get_obj_capacity()`, `par_set_obj_n_save()` when object persistence and external IDs are enabled, and `par_get_default_*()`
+- supported firmware APIs: `par_set_str()` / `par_get_str()`, `par_set_bytes()` / `par_get_bytes()`, `par_set_arr_*()` / `par_get_arr_*()`, their object `*_by_id()` variants, `par_get_obj_len()`, `par_get_obj_capacity()`, `par_set_obj_n_save()` / `par_set_obj_n_save_by_id()` when object persistence and external IDs are enabled, and `par_get_default_*()`
 - supported shell payload display: the packaged RT-Thread shell accepts `par get <id>` for object rows after the normal read boundary succeeds only when `AUTOGEN_PM_MSH_CMD_GET_OBJECT` and `RT_USING_HEAP` are enabled. `STR` rows are printed as quoted and escaped strings, `BYTES` rows as `hex:...`, and `ARR_U8` / `ARR_U16` / `ARR_U32` rows as `[v0,v1,...]`.
 - supported shell default restore: `par def <id>` and `par def_all` can restore object rows to their configured defaults through the maintenance/recovery path without requiring object write permission.
-- not supported: generic scalar payload APIs `par_set()` / `par_get()` / `par_set_scalar_n_save()`, ID-based payload wrappers `par_set_by_id()` / `par_get_by_id()`, or shell `par set` for object rows
+- not supported: using generic scalar payload APIs `par_set_scalar()` / `par_get_scalar()` / `par_set_scalar_n_save()` for object rows, or shell `par set` for object rows
 
 The core does not provide object on-change callbacks. Integrations that need notifications should wrap successful object setter calls and emit events or compare values at the application layer.
 

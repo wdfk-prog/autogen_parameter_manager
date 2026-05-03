@@ -1,6 +1,6 @@
 # API reference
 
-This document groups the public API from `src/par.h` by responsibility.
+This document groups the public API from `include/par.h` by responsibility.
 
 ## Conventions
 
@@ -62,9 +62,9 @@ These are relevant only when mutex support is enabled in the integration.
 
 | Function | Description |
 | --- | --- |
-| `par_set(par_num, p_val)` | Set one scalar parameter from a typed pointer. Object rows are rejected with `ePAR_ERROR_TYPE`. This public setter path enforces access policy and returns `ePAR_ERROR_ACCESS` when the target parameter is externally read-only. |
-| `par_set_fast(par_num, p_val)` | Set a parameter from a typed pointer through the unchecked fast path. This API resolves the runtime type and then dispatches to the matching `par_set_xxx_fast()` implementation. |
-| `par_set_by_id(id, p_val)` | Set one scalar parameter using its external ID. Object rows are rejected with `ePAR_ERROR_TYPE`. This path resolves the ID to `par_num_t` and then uses the same checked setter flow as `par_set()`. |
+| `par_set_scalar(par_num, p_val)` | Set one scalar parameter from a typed pointer. Object rows are rejected with `ePAR_ERROR_TYPE`. This public setter path enforces access policy and returns `ePAR_ERROR_ACCESS` when the target parameter is externally read-only. |
+| `par_set_scalar_fast(par_num, p_val)` | Set a parameter from a typed pointer through the unchecked fast path. This API resolves the runtime type and then dispatches to the matching `par_set_xxx_fast()` implementation. |
+| `par_set_scalar_by_id(id, p_val)` | Set one scalar parameter using its external ID. Object rows are rejected with `ePAR_ERROR_TYPE`. This path resolves the ID to `par_num_t` and then uses the same checked setter flow as `par_set_scalar()`. |
 
 
 ## Object parameter APIs
@@ -88,8 +88,13 @@ These are relevant only when mutex support is enabled in the integration.
 | `par_get_default_arr_u8()` | Read the default `uint8_t` array payload. |
 | `par_get_default_arr_u16()` | Read the default `uint16_t` array payload. |
 | `par_get_default_arr_u32()` | Read the default `uint32_t` array payload. |
+| `par_set_*_by_id()` | Set an object parameter by external ID for `bytes`, `str`, `arr_u8`, `arr_u16`, or `arr_u32`. |
+| `par_get_*_by_id()` | Read an object parameter by external ID for `bytes`, `str`, `arr_u8`, `arr_u16`, or `arr_u32`. |
+| `par_get_default_*_by_id()` | Read an object default payload by external ID. |
+| `par_get_obj_len_by_id()` | Return the current object payload length by external ID. |
+| `par_get_obj_capacity_by_id()` | Return the configured object payload capacity by external ID. |
 
-Object rows use the shared object pool plus one runtime slot per parameter. They remain RAM-only by default, but rows with `pers_ = 1` can be stored in the dedicated object persistence block when `PAR_CFG_NVM_OBJECT_EN = 1` and `PAR_CFG_ENABLE_ID = 1`. Object rows use only the dedicated object typed APIs; the generic and ID-based get/set entry points remain scalar-only. Packaged RT-Thread shell payload display for object rows is additionally gated by `AUTOGEN_PM_MSH_CMD_GET_OBJECT` and `RT_USING_HEAP`.
+Object rows use the shared object pool plus one runtime slot per parameter. They remain RAM-only by default, but rows with `pers_ = 1` can be stored in the dedicated object persistence block when `PAR_CFG_NVM_OBJECT_EN = 1` and `PAR_CFG_ENABLE_ID = 1`. Object rows use dedicated object APIs by parameter number and by external ID. Generic scalar APIs remain scalar-only. Packaged RT-Thread shell payload display for object rows is additionally gated by `AUTOGEN_PM_MSH_CMD_GET_OBJECT` and `RT_USING_HEAP`.
 
 ## Typed setter macro wrappers
 
@@ -170,8 +175,8 @@ These reset APIs are different from startup initialization:
 
 | Function | Description |
 | --- | --- |
-| `par_get(par_num, p_val)` | Read one scalar parameter into a typed destination pointer. Object rows are rejected with `ePAR_ERROR_TYPE`. When `PAR_CFG_ENABLE_ACCESS = 1`, scalar table rows are always readable because only `ePAR_ACCESS_RO` and `ePAR_ACCESS_RW` are valid row modes. |
-| `par_get_by_id(id, p_val)` | Read one scalar parameter using its external ID. Object rows are rejected with `ePAR_ERROR_TYPE`. After ID resolution it uses the same checked getter flow as `par_get()`, including read-access enforcement when enabled. |
+| `par_get_scalar(par_num, p_val)` | Read one scalar parameter into a typed destination pointer. Object rows are rejected with `ePAR_ERROR_TYPE`. When `PAR_CFG_ENABLE_ACCESS = 1`, scalar table rows are always readable because only `ePAR_ACCESS_RO` and `ePAR_ACCESS_RW` are valid row modes. |
+| `par_get_scalar_by_id(id, p_val)` | Read one scalar parameter using its external ID. Object rows are rejected with `ePAR_ERROR_TYPE`. After ID resolution it uses the same checked getter flow as `par_get_scalar()`, including read-access enforcement when enabled. |
 
 Typed getter macros are removed. Call the typed getter functions directly and always check the returned status. When `PAR_CFG_ENABLE_ACCESS = 1`, getters assume table rows use only the supported readable modes: `ePAR_ACCESS_RO` or `ePAR_ACCESS_RW`.
 
@@ -186,7 +191,7 @@ Typed getter macros are removed. Call the typed getter functions directly and al
 | `par_get_u32(par_num, p_val)` | Read a `U32` parameter into `*p_val`. Returns status. |
 | `par_get_i32(par_num, p_val)` | Read an `I32` parameter into `*p_val`. Returns status. |
 | `par_get_f32(par_num, p_val)` | Read an `F32` parameter into `*p_val`. Available only when `PAR_CFG_ENABLE_TYPE_F32 = 1`. Returns status. |
-| `par_get_default(par_num, p_val)` | Read the configured default value for a parameter. |
+| `par_get_scalar_default(par_num, p_val)` | Read the configured default value for a parameter. |
 
 ## Metadata access
 

@@ -7,7 +7,7 @@ This document explains how the module is structured internally and how the major
 The module separates four concerns:
 
 1. **Generated parameter definition** through `par_table.def`, generated enums, and generated config structs
-2. **Core runtime access** through `src/par.c`, `src/par.h`, and private implementation fragments included only by `src/par.c`
+2. **Core runtime access** through `src/par.c`, `include/par.h`, and private implementation fragments included only by `src/par.c`
 3. **Layout and storage** through `par_layout.*` and compile-time storage initialization fragments
 4. **Optional platform and NVM integration** through `par_if.*`, `par_atomic.h`, and `par_nvm.*`
 
@@ -212,7 +212,7 @@ This split keeps integer configuration errors out of the firmware image while st
 
 ## ID lookup path
 
-The module supports ID-based APIs such as `par_get_num_by_id()`, `par_get_id_by_num()`, plus the scalar-only wrappers `par_get_by_id()` and `par_set_by_id()`. Object rows do not use the generic or ID-based get/set entry points; they use only the dedicated object typed APIs. All public checked scalar write APIs (`par_set()`, `par_set_by_id()`, and typed scalar setters) converge on the same checked setter core, while the checked getter paths still enforce the external read bit before returning live data.
+The module supports ID-based APIs such as `par_get_num_by_id()`, `par_get_id_by_num()`, scalar wrappers `par_get_scalar_by_id()` and `par_set_scalar_by_id()`, and object wrappers such as `par_get_str_by_id()` / `par_set_str_by_id()`. Generic scalar entry points remain scalar-only, while object rows use dedicated object typed APIs by parameter number or external ID. All public checked scalar write APIs (`par_set_scalar()`, `par_set_scalar_by_id()`, and typed scalar setters) converge on the same checked setter core, while the checked getter paths still enforce the external read bit before returning live data.
 
 Because external IDs do not need to be sequential, the build generates a static hash map from `par_table.def`. `par_init()` does not build the ID map at runtime.
 
@@ -355,13 +355,13 @@ The module intentionally keeps a compile-time ordered slot image instead of intr
 
 The module stays portable by keeping platform-specific logic behind dedicated boundaries.
 
-Header placement follows the same rule: the main public entry header stays at `src/par.h`, while helper headers remain next to the implementation areas that own them. This keeps the package self-contained without introducing a separate `include/` tree before the API surface is stable.
+Header placement follows the same rule: public entry and API headers stay under `include/`, while private helper headers remain next to the implementation areas that own them. The public entry point is separated from implementation sources, but the current configuration header chain still includes generated and packaged configuration headers from `src/` (`def/par_def.h` and `nvm/par_nvm_cfg.h`). The package SConscript therefore exports both `parameters/include` and `parameters/src`; custom builds should do the same until those generated/config headers are exported separately.
 
 ### Core portable layer
 
 Implemented under layered `src/` subdirectories:
 
-- `src/par.c`, `src/par.h`, and `src/par_cfg.h` for module lifecycle, shared core helpers, metadata APIs, and top-level orchestration
+- `src/par.c`, `include/par.h`, and `include/par_cfg.h` for module lifecycle, shared core helpers, metadata APIs, and top-level orchestration
 - `src/def/` for parameter definitions and generated static ID mapping
 - `src/layout/` for storage layout calculation and accessors
 - `src/scalar/` for scalar parameter APIs and scalar live-value storage
