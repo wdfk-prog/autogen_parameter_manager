@@ -53,13 +53,16 @@ static bool gb_is_init = false;
 static struct
 {
 #if (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION)
-    pf_par_validation_t validation;         /**< Scalar validation callback function (or NULL). */
+    union
+    {
+        pf_par_validation_t scalar;     /**< Scalar validation callback function (or NULL). */
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
-    pf_par_obj_validation_t obj_validation; /**< Object validation callback function (or NULL). */
+        pf_par_obj_validation_t object; /**< Object validation callback function (or NULL). */
 #endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
+    } validation;                       /**< Shared validation callback function slot. */
 #endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 #if (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK)
-    pf_par_on_change_cb_t on_change;        /**< Scalar on-change callback function (or NULL). */
+    pf_par_on_change_cb_t on_change;    /**< Scalar on-change callback function (or NULL). */
 #endif /* (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK) */
 } g_par_cb_table[ePAR_NUM_OF];
 #endif /* ((1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) || (1 == PAR_CFG_ENABLE_CHANGE_CALLBACK)) */
@@ -129,6 +132,22 @@ PAR_PORT_WEAK bool par_port_is_desc_valid(const char * const p_desc)
 }
 #endif /* (1 == PAR_CFG_ENABLE_DESC) && (1 == PAR_CFG_ENABLE_DESC_CHECK) */
 /**
+ * @brief Return one static parameter-table entry after number validation.
+ *
+ * @param par_num Parameter number.
+ * @return Parameter configuration pointer, or NULL when @p par_num is invalid.
+ */
+static const par_cfg_t *par_core_get_table_entry(const par_num_t par_num)
+{
+    PAR_ASSERT(par_num < ePAR_NUM_OF);
+    if (par_num >= (par_num_t)ePAR_NUM_OF)
+    {
+        return NULL;
+    }
+
+    return par_cfg_get(par_num);
+}
+/**
  * @brief Resolve metadata entry for parameter identified by number.
  *
  * @note Metadata resolution only checks parameter number and table.
@@ -151,16 +170,10 @@ par_status_t par_core_resolve_metadata(const par_num_t par_num, const void * con
         return ePAR_ERROR_PARAM;
     }
 
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
-    if (par_num >= ePAR_NUM_OF)
-    {
-        return ePAR_ERROR_PAR_NUM;
-    }
-
-    p_cfg = par_get_config(par_num);
+    p_cfg = par_core_get_table_entry(par_num);
     if (NULL == p_cfg)
     {
-        return ePAR_ERROR;
+        return ePAR_ERROR_PAR_NUM;
     }
 
     if (NULL != pp_cfg)
@@ -208,12 +221,12 @@ bool par_core_scalar_validation_accepts(const par_num_t par_num, const par_type_
         return false;
     }
 
-    if (NULL == g_par_cb_table[par_num].validation)
+    if (NULL == g_par_cb_table[par_num].validation.scalar)
     {
         return true;
     }
 
-    return g_par_cb_table[par_num].validation(par_num, val);
+    return g_par_cb_table[par_num].validation.scalar(par_num, val);
 }
 #endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 
@@ -251,7 +264,7 @@ void par_core_notify_scalar_change_if_changed(const par_num_t par_num,
     }
     else
     {
-        p_cfg = par_get_config(par_num);
+        p_cfg = par_core_get_table_entry(par_num);
         if (NULL == p_cfg)
         {
             return;
@@ -322,12 +335,12 @@ bool par_core_object_validation_accepts(const par_num_t par_num,
         return false;
     }
 
-    if (NULL == g_par_cb_table[par_num].obj_validation)
+    if (NULL == g_par_cb_table[par_num].validation.object)
     {
         return true;
     }
 
-    return g_par_cb_table[par_num].obj_validation(par_num, p_data, len);
+    return g_par_cb_table[par_num].validation.object(par_num, p_data, len);
 }
 
 /**
@@ -339,13 +352,20 @@ bool par_core_object_validation_accepts(const par_num_t par_num,
 void par_core_register_obj_validation(const par_num_t par_num,
                                       const pf_par_obj_validation_t validation)
 {
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
-    if (par_num >= (par_num_t)ePAR_NUM_OF)
+    const par_cfg_t * const p_cfg = par_core_get_table_entry(par_num);
+
+    if (NULL == p_cfg)
     {
         return;
     }
 
-    g_par_cb_table[par_num].obj_validation = validation;
+    if (false == par_object_type_is_object(p_cfg->type))
+    {
+        PAR_ASSERT(0);
+        return;
+    }
+
+    g_par_cb_table[par_num].validation.object = validation;
 }
 #endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
@@ -486,9 +506,9 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
 
     for (uint32_t i = 0; i < ePAR_NUM_OF; i++)
     {
-#if (1 == PAR_CFG_ENABLE_RANGE)
+#if (1 == PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK) && (1 == PAR_CFG_ENABLE_RANGE) && (1 == PAR_CFG_ENABLE_TYPE_F32)
         /*
-         * Keep F32 range/default validation at runtime.
+         * Keep optional F32 range/default validation at runtime.
          */
         if (ePAR_TYPE_F32 == p_par_cfg[i].type)
         {
@@ -496,7 +516,7 @@ static par_status_t par_check_table_validity(const par_cfg_t * const p_par_cfg)
                         (p_par_cfg[i].value_cfg.scalar.def.f32 <= p_par_cfg[i].value_cfg.scalar.range.max.f32)) &&
                        (p_par_cfg[i].value_cfg.scalar.range.min.f32 <= p_par_cfg[i].value_cfg.scalar.def.f32));
         }
-#endif /* (1 == PAR_CFG_ENABLE_RANGE) */
+#endif /* (1 == PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK) && (1 == PAR_CFG_ENABLE_RANGE) && (1 == PAR_CFG_ENABLE_TYPE_F32) */
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
         if ((true == par_object_type_is_object(p_par_cfg[i].type)) &&
             (false == par_object_default_cfg_is_valid(&p_par_cfg[i].value_cfg.object)))
@@ -952,11 +972,7 @@ par_status_t par_has_changed(const par_num_t par_num, bool * const p_has_changed
  */
 const par_cfg_t *par_get_config(const par_num_t par_num)
 {
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
-    if (par_num >= ePAR_NUM_OF)
-        return NULL;
-
-    return par_cfg_get(par_num);
+    return par_core_get_table_entry(par_num);
 }
 /**
  * @brief Get parameter name.
@@ -967,9 +983,9 @@ const par_cfg_t *par_get_config(const par_num_t par_num)
 #if (1 == PAR_CFG_ENABLE_NAME)
 const char *par_get_name(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->name;
     }
@@ -987,20 +1003,20 @@ const char *par_get_name(const par_num_t par_num)
 par_range_t par_get_range(const par_num_t par_num)
 {
     par_range_t range = { 0 };
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL == par_cfg)
     {
-#if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
-        if (true == par_object_type_is_object(par_cfg->type))
-        {
-            return range;
-        }
-#endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
-        return par_cfg->value_cfg.scalar.range;
+        return range;
     }
+#if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
+    if (true == par_object_type_is_object(par_cfg->type))
+    {
+        return range;
+    }
+#endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
-    return range;
+    return par_cfg->value_cfg.scalar.range;
 }
 #endif /* (1 == PAR_CFG_ENABLE_RANGE) */
 /**
@@ -1012,9 +1028,9 @@ par_range_t par_get_range(const par_num_t par_num)
 #if (1 == PAR_CFG_ENABLE_UNIT)
 const char *par_get_unit(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->unit;
     }
@@ -1031,9 +1047,9 @@ const char *par_get_unit(const par_num_t par_num)
 #if (1 == PAR_CFG_ENABLE_DESC)
 const char *par_get_desc(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->desc;
     }
@@ -1049,9 +1065,9 @@ const char *par_get_desc(const par_num_t par_num)
  */
 par_type_list_t par_get_type(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->type;
     }
@@ -1067,9 +1083,9 @@ par_type_list_t par_get_type(const par_num_t par_num)
 #if (1 == PAR_CFG_ENABLE_ACCESS)
 par_access_t par_get_access(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->access;
     }
@@ -1085,9 +1101,9 @@ par_access_t par_get_access(const par_num_t par_num)
  */
 par_role_t par_get_read_roles(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->read_roles;
     }
@@ -1102,9 +1118,9 @@ par_role_t par_get_read_roles(const par_num_t par_num)
  */
 par_role_t par_get_write_roles(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->write_roles;
     }
@@ -1132,9 +1148,13 @@ bool par_can_read(const par_num_t par_num, const par_role_t roles)
 {
     const par_cfg_t *par_cfg = NULL;
 
-    if ((false == par_roles_are_valid(roles)) ||
-        (ePAR_OK != par_core_resolve_metadata(par_num, NULL, false, &par_cfg)) ||
-        (NULL == par_cfg))
+    if (false == par_roles_are_valid(roles))
+    {
+        return false;
+    }
+
+    par_cfg = par_core_get_table_entry(par_num);
+    if (NULL == par_cfg)
     {
         return false;
     }
@@ -1159,9 +1179,13 @@ bool par_can_write(const par_num_t par_num, const par_role_t roles)
 {
     const par_cfg_t *par_cfg = NULL;
 
-    if ((false == par_roles_are_valid(roles)) ||
-        (ePAR_OK != par_core_resolve_metadata(par_num, NULL, false, &par_cfg)) ||
-        (NULL == par_cfg))
+    if (false == par_roles_are_valid(roles))
+    {
+        return false;
+    }
+
+    par_cfg = par_core_get_table_entry(par_num);
+    if (NULL == par_cfg)
     {
         return false;
     }
@@ -1186,9 +1210,9 @@ bool par_can_write(const par_num_t par_num, const par_role_t roles)
 #if (1 == PAR_CFG_NVM_EN)
 bool par_is_persistent(const par_num_t par_num)
 {
-    const par_cfg_t *par_cfg = NULL;
+    const par_cfg_t * const par_cfg = par_core_get_table_entry(par_num);
 
-    if (ePAR_OK == par_core_resolve_metadata(par_num, NULL, false, &par_cfg))
+    if (NULL != par_cfg)
     {
         return par_cfg->persistent;
     }
@@ -1369,7 +1393,10 @@ par_status_t par_save_clean(void)
  */
 void par_register_on_change_cb(const par_num_t par_num, const pf_par_on_change_cb_t cb)
 {
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
+    if (NULL == par_core_get_table_entry(par_num))
+    {
+        return;
+    }
 
     g_par_cb_table[par_num].on_change = cb;
 }
@@ -1383,9 +1410,21 @@ void par_register_on_change_cb(const par_num_t par_num, const pf_par_on_change_c
 #if (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION)
 void par_register_validation(const par_num_t par_num, const pf_par_validation_t validation)
 {
-    PAR_ASSERT(par_num < ePAR_NUM_OF);
+    const par_cfg_t * const p_cfg = par_core_get_table_entry(par_num);
 
-    g_par_cb_table[par_num].validation = validation;
+    if (NULL == p_cfg)
+    {
+        return;
+    }
+#if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
+    if (true == par_object_type_is_object(p_cfg->type))
+    {
+        PAR_ASSERT(0);
+        return;
+    }
+#endif /* (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
+
+    g_par_cb_table[par_num].validation.scalar = validation;
 }
 #endif /* (1 == PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 

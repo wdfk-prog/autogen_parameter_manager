@@ -72,6 +72,13 @@ if PKG_USING_AUTOGEN_PARAMETER_MANAGER
             help
                 Keep parameter ID fields and by-id API path.
 
+        config AUTOGEN_PM_ENABLE_RUNTIME_TABLE_CHECK
+            bool "Enable runtime parameter-table diagnostics"
+            default y
+            help
+                Keep startup checks that protect metadata not covered by portable
+                compile-time checks, such as F32 range/default validation.
+
         config AUTOGEN_PM_ENABLE_RUNTIME_ID_DUP_CHECK
             bool "Enable runtime duplicate-ID scan logging"
             default n

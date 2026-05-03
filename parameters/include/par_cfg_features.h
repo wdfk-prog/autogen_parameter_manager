@@ -201,6 +201,16 @@ PAR_STATIC_ASSERT(par_cfg_object_types_enabled_matches_type_switches,
 #endif /* !defined(PAR_CFG_ENABLE_RUNTIME_VALIDATION) */
 
 /**
+ * @brief Enable/Disable optional runtime parameter-table diagnostics.
+ *
+ * @details Keeps startup checks that protect metadata not covered by
+ * portable compile-time checks, such as F32 range/default validation.
+ */
+#ifndef PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK
+#define PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK (1)
+#endif /* !defined(PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK) */
+
+/**
  * @brief Enable/Disable on-change callbacks in normal setters.
  */
 #ifndef PAR_CFG_ENABLE_CHANGE_CALLBACK

@@ -182,10 +182,14 @@ Relevant options in `par_cfg.h`:
 
 When `PAR_CFG_NVM_EN = 1`, persistence metadata in the parameter table is compiled in automatically. There is no separate `PAR_CFG_ENABLE_PERSIST` switch anymore.
 
-ID-based lookup is generated statically when `PAR_CFG_ENABLE_ID = 1`. Optional startup diagnostics can be enabled with:
+ID-based lookup is generated statically when `PAR_CFG_ENABLE_ID = 1`. Optional ID startup diagnostics can be enabled with:
 
 - `PAR_CFG_ENABLE_RUNTIME_ID_DUP_CHECK`
 - `PAR_CFG_ENABLE_RUNTIME_ID_HASH_COLLISION_CHECK`
+
+F32 parameter-table startup diagnostics are enabled by default and can be controlled with:
+
+- `PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK`
 
 When NVM is enabled, backend requirements depend on the selected persistence mode. Scalar persistence and shared object persistence require a scalar storage backend API, either from one packaged backend adapter or from an integrator-provided equivalent. Dedicated object-only persistence can disable scalar records and use dedicated object backend hooks without linking a packaged scalar backend. `src/nvm/par_nvm.c` resolves and validates only the backends required by the active mode during initialization, then uses the mounted callbacks directly for later reads, writes, erases, and sync operations. The packaged scalar-backend paths include the RT-Thread AT24CXX backend and the portable flash-ee backend. The flash-ee core is packaged under `src/nvm/backend/` and can be integrated either through the repository-root `backend/par_store_backend_flash_ee_fal.c` bridge or through product-specific native flash hooks in the repository-root `backend/par_store_backend_flash_ee_native.c` adapter. The module can reuse an already-initialized backend or initialize it on demand and later deinitialize it only when it owns that initialization. Module deinit is conservative: it attempts backend and interface cleanup, and it clears the top-level module init state only after the owned child deinit steps succeed.
 When `PAR_CFG_NVM_WRITE_VERIFY_EN = 1`, the NVM path also performs a backend sync plus readback verification after record writes and after header commits. The exact comparison rules are owned by the selected persisted-record layout adapter, not hard-coded in `par_nvm.c`.

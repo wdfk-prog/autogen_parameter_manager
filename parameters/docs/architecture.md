@@ -198,17 +198,23 @@ These checks are generated from `par_table.def`, so invalid integer configuratio
 
 However, when `PAR_CFG_ENABLE_TYPE_F32 = 0`, any `PAR_ITEM_F32(...)` entry is rejected at compile time through a static assertion. This keeps `par_def.h` configuration-independent while still failing fast in `par_def.c`.
 
-### Runtime validation
+### Runtime table diagnostics
 
-Runtime validation is used for checks that are better handled dynamically, including:
+Runtime table diagnostics cover startup checks that are generated into firmware instead of enforced by C integer constant expressions. They are controlled separately from application validation callbacks.
 
-- floating-point range validation
+`PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK` is enabled by default. When it is `1`, the module checks `F32` range/default metadata at startup because floating-point range expressions are not part of the portable integer compile-time validation path.
+
+Other startup metadata diagnostics, controlled by their corresponding metadata options, include:
+
 - `name != NULL` when name metadata is enabled
 - `desc != NULL` when description metadata is enabled
 - description policy checks through `par_port_is_desc_valid()` when enabled
-- per-parameter application validation callbacks when `PAR_CFG_ENABLE_RUNTIME_VALIDATION = 1`
 
-This split keeps integer configuration errors out of the firmware image while still allowing flexible runtime policies. Runtime validation callbacks can be compiled out independently from the rest of the metadata model.
+### Runtime validation callbacks
+
+Runtime validation callbacks are per-parameter application policies enabled by `PAR_CFG_ENABLE_RUNTIME_VALIDATION = 1`. They run through the checked setter path and are independent from startup table diagnostics.
+
+This split keeps integer configuration errors out of the firmware image while still allowing flexible runtime policies. Runtime table diagnostics and runtime validation callbacks can be compiled out independently from the rest of the metadata model.
 
 ## ID lookup path
 

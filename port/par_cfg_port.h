@@ -29,7 +29,8 @@
 #endif /* defined(AUTOGEN_PM_USING_RTT_AT24CXX_BACKEND) */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif /* defined(__cplusplus) */
 /**
  * @brief Kconfig bridge: AUTOGEN_PM_* overrides PAR_CFG_* settings.
@@ -406,7 +407,6 @@ extern "C" {
 #define PAR_CFG_ENABLE_TYPE_F32 (0)
 #endif /* defined(AUTOGEN_PM_ENABLE_TYPE_F32) */
 
-
 /**
  * @brief Enable STR object parameter support.
  *
@@ -473,7 +473,7 @@ extern "C" {
  * @details PAR_CFG_OBJECT_TYPES_ENABLED is enabled when at least one object
  * type is enabled by menuconfig.
  */
-#if ((1 == PAR_CFG_ENABLE_TYPE_STR)    || (1 == PAR_CFG_ENABLE_TYPE_BYTES)  || \
+#if ((1 == PAR_CFG_ENABLE_TYPE_STR) || (1 == PAR_CFG_ENABLE_TYPE_BYTES) ||      \
      (1 == PAR_CFG_ENABLE_TYPE_ARR_U8) || (1 == PAR_CFG_ENABLE_TYPE_ARR_U16) || \
      (1 == PAR_CFG_ENABLE_TYPE_ARR_U32))
 #define PAR_CFG_OBJECT_TYPES_ENABLED (1)
@@ -576,6 +576,18 @@ extern "C" {
 #else
 #define PAR_CFG_ENABLE_ID (0)
 #endif /* defined(AUTOGEN_PM_ENABLE_ID) */
+
+/**
+ * @brief Enable runtime parameter-table diagnostics.
+ *
+ * @details Keeps startup checks that protect metadata not covered by
+ * portable compile-time checks, such as F32 range/default validation.
+ */
+#ifdef AUTOGEN_PM_ENABLE_RUNTIME_TABLE_CHECK
+#define PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK (1)
+#else
+#define PAR_CFG_ENABLE_RUNTIME_TABLE_CHECK (0)
+#endif /* defined(AUTOGEN_PM_ENABLE_RUNTIME_TABLE_CHECK) */
 
 /**
  * @brief Enable runtime duplicate-ID diagnostics.
@@ -704,9 +716,9 @@ extern "C" {
 /**
  * @brief Map module log macros to RT-Thread rtdbg.
  */
-#define PAR_PORT_LOG_INFO(...)  LOG_I(__VA_ARGS__)
+#define PAR_PORT_LOG_INFO(...) LOG_I(__VA_ARGS__)
 #define PAR_PORT_LOG_DEBUG(...) LOG_D(__VA_ARGS__)
-#define PAR_PORT_LOG_WARN(...)  LOG_W(__VA_ARGS__)
+#define PAR_PORT_LOG_WARN(...) LOG_W(__VA_ARGS__)
 #define PAR_PORT_LOG_ERROR(...) LOG_E(__VA_ARGS__)
 
 #ifdef __cplusplus
