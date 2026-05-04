@@ -1,3 +1,5 @@
+[中文](./README.zh-CN.md)
+
 # autogen_parameter_manager
 
 `autogen_parameter_manager` is an RT-Thread package wrapper around the portable `Device Parameters` module. It provides package configuration, RT-Thread-facing ports, storage backend adapters, and a bundled parameter table template/profile.
