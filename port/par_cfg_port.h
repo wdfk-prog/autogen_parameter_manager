@@ -88,6 +88,17 @@ extern "C"
 #endif /* defined(AUTOGEN_PM_USING_ASSERT) */
 
 /**
+ * @brief Select generated static layout mode from AUTOGEN_PM_LAYOUT_SOURCE_SCRIPT.
+ *
+ * @details When enabled, par_layout_init() consumes the generated static offset
+ * tables instead of scanning the compiled parameter table at startup.
+ */
+#ifdef AUTOGEN_PM_LAYOUT_SOURCE_SCRIPT
+#define PAR_CFG_LAYOUT_SOURCE         PAR_CFG_LAYOUT_SCRIPT
+#define PAR_CFG_LAYOUT_STATIC_INCLUDE "par_layout_static.h"
+#endif /* defined(AUTOGEN_PM_LAYOUT_SOURCE_SCRIPT) */
+
+/**
  * @brief Enable managed NVM storage from AUTOGEN_PM_USING_NVM.
  *
  * @details Required before any par_table.def row with pers_ = 1 can be stored

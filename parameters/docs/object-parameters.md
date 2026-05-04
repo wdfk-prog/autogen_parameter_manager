@@ -205,14 +205,16 @@ Compile-scan layout mode can derive object-pool offsets by scanning the configur
 
 ### Script layout mode
 
-Script layout mode requires generated object-slot counts and object-pool byte offsets only when object rows are compiled in. Scalar-only builds can keep using scalar-only static layout headers.
+Script layout mode always requires generated scalar counts, parameter-to-slot offsets, and the layout signature macro. Object-slot counts and object-pool byte offsets are required only when object rows are compiled in.
 
 The generated static layout contract should include:
 
+- scalar storage counts
+- layout signature for stale-header detection
 - parameter-to-slot offsets for scalar groups
 - parameter-to-object-slot indices when needed
-- parameter-to-object-pool byte offsets
-- total shared object-pool byte count
+- parameter-to-object-pool byte offsets when object rows are compiled in
+- total shared object-pool byte count when object rows are compiled in
 
 The runtime still validates that generated object-pool offsets are contiguous and follow parameter-table order. Generators must not leave gaps or reorder object windows.
 

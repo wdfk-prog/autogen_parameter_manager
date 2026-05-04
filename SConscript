@@ -31,7 +31,18 @@ path = [
     cwd + '/parameters/src/object',
     cwd + '/parameters/src/scalar',
     cwd + '/parameters/src/detail',
+    cwd + '/parameters/generated',
 ]
+
+if GetDepend('AUTOGEN_PM_LAYOUT_SOURCE_SCRIPT'):
+    src += Split('''
+    parameters/generated/par_layout_static.c
+    ''')
+
+if GetDepend('AUTOGEN_PM_ENABLE_GENERATED_INFO'):
+    src += Split('''
+    parameters/generated/par_generated_info.c
+    ''')
 
 if GetDepend('AUTOGEN_PM_USING_NVM'):
     scalar_backend_needed = (

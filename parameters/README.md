@@ -13,7 +13,7 @@ It is designed for projects that need a clean way to:
 
 ## What this module provides
 
-- **Single source of truth** through `par_table.def`
+- **Single source of truth** through `parameters/schema/par_table.csv`, with generated `par_table.def` compatibility output
 - **Typed APIs** for `U8`, `I8`, `U16`, `I16`, `U32`, `I32`, and, when enabled, `F32`
 - **Fixed-capacity object APIs** for strings, raw bytes, and fixed-size unsigned arrays
 - **Optional metadata** such as name, unit, description, access, ID, persistence flags, and optional role-based read/write visibility metadata
@@ -28,11 +28,12 @@ It is designed for projects that need a clean way to:
 ### Quick start
 
 1. Add `src/par.c` and the sources from `src/def`, `src/layout`, `src/scalar`, `src/object`, `src/nvm`, and `src/port` to your build. Add `src/nvm/backend` only when scalar persistence or shared object persistence uses a packaged scalar backend adapter.
-2. Provide a project-specific `par_table.def` at the package root.
+2. Provide `parameters/schema/par_table.csv` and regenerate the package-root `par_table.def` with `parameters/tools/pargen.py`.
 3. Provide `port/par_cfg_port.h` in your include path.
 4. Optionally provide `port/par_if_port.c` and `port/par_atomic_port.h` when your platform needs them.
 5. Call `par_init()` before using runtime APIs.
-6. Use the scalar typed `par_set_*` / `par_get_*` APIs for scalar rows and the dedicated object typed APIs (`par_set_str()` / `par_get_str()`, `par_set_bytes()` / `par_get_bytes()`, `par_set_arr_*()` / `par_get_arr_*()`) for object rows. Getter APIs use an explicit output pointer and return `par_status_t`. When `PAR_CFG_ENABLE_ACCESS = 1`, parameter table rows are limited to `ePAR_ACCESS_RO` or `ePAR_ACCESS_RW`; `ePAR_ACCESS_NONE` and write-only masks are rejected at build time.
+6. Edit `parameters/schema/par_table.csv` and run `python3 parameters/tools/pargen.py` when changing bundled parameter rows.
+7. Use the scalar typed `par_set_*` / `par_get_*` APIs for scalar rows and the dedicated object typed APIs (`par_set_str()` / `par_get_str()`, `par_set_bytes()` / `par_get_bytes()`, `par_set_arr_*()` / `par_get_arr_*()`) for object rows. Getter APIs use an explicit output pointer and return `par_status_t`. When `PAR_CFG_ENABLE_ACCESS = 1`, parameter table rows are limited to `ePAR_ACCESS_RO` or `ePAR_ACCESS_RW`; `ePAR_ACCESS_NONE` and write-only masks are rejected at build time.
 
 A minimal example:
 
@@ -96,6 +97,7 @@ The bundled `par_table.def` treats its object rows as optional examples and guar
 
 - [Documentation overview](docs/overview.md) for reader paths and the maintained document set
 - [Getting started](docs/getting-started.md) for integration steps, required files, and first-use examples
+- [CSV parameter generator](docs/csv-generator.md) for CSV schema fields, Python requirements, validation, ID allocation, and generated layout files
 - [Architecture](docs/architecture.md) for storage model, validation flow, ID lookup, and layout design
 - [API reference](docs/api-reference.md) for the public API grouped by responsibility
 - [Object parameters](docs/object-parameters.md) for the dedicated object-pool design, read/write flow, fixed-size arrays, and current NVM behavior
@@ -120,9 +122,24 @@ The bundled `par_table.def` treats its object rows as optional examples and guar
 │   │   ├── overview.md
 │   │   ├── api-reference.md
 │   │   ├── architecture.md
+│   │   ├── csv-generator.md
 │   │   ├── flash-ee-backend-design.md
 │   │   ├── getting-started.md
 │   │   └── object-parameters.md
+│   ├── schema/
+│   │   ├── par_table.csv
+│   │   ├── par_id_lock.json
+│   │   └── pargen.json
+│   ├── tools/
+│   │   └── pargen.py
+│   ├── generated/
+│   │   ├── par_layout_static.h
+│   │   ├── par_layout_static.c
+│   │   ├── par_generated_info.h
+│   │   ├── par_generated_info.c
+│   │   └── par_manifest.json
+│   ├── tests/
+│   │   └── test_pargen.py
 │   ├── src/
 │   │   ├── par.c
 │   │   ├── par.h

@@ -97,6 +97,23 @@ if PKG_USING_AUTOGEN_PARAMETER_MANAGER
                 diagnostics. Compile-time collision checking and static ID-map
                 generation remain enabled by default when parameter IDs are enabled.
 
+        config AUTOGEN_PM_LAYOUT_SOURCE_SCRIPT
+            bool "Use generated static parameter layout"
+            default n
+            help
+                Compile the pargen.py generated static layout tables instead of
+                scanning the parameter table at startup. Regenerate
+                parameters/generated/par_layout_static.* after editing
+                parameters/schema/par_table.csv.
+
+        config AUTOGEN_PM_ENABLE_GENERATED_INFO
+            bool "Compile generated parameter summary metadata"
+            default n
+            help
+                Compile parameters/generated/par_generated_info.c so firmware or
+                debugger integrations can inspect generated table counts, object
+                pool size, and ID hash geometry.
+
         config AUTOGEN_PM_ENABLE_ACCESS
             bool "Enable parameter access metadata"
             default y

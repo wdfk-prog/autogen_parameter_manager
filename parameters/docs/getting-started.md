@@ -5,13 +5,13 @@ This guide shows how to integrate the `Device Parameters` module into a firmware
 ## Integration checklist
 
 1. Add `src/par.c` and the needed sources from `src/def`, `src/layout`, `src/scalar`, `src/object`, `src/nvm`, and `src/port` to your project. Add `src/nvm/backend` only when scalar persistence or shared object persistence uses a packaged scalar backend adapter.
-2. Provide `par_table.def` at the package root.
+2. Provide `parameters/schema/par_table.csv` and regenerate the package-root `par_table.def` with `parameters/tools/pargen.py`.
 3. Provide `port/par_cfg_port.h`.
 4. Decide whether you want:
    - NVM persistence and whether scalar/shared-object storage or dedicated object-only storage will implement it
    - a platform-specific interface backend
    - a platform-specific atomic backend
-   - compile-scan or script-provided layout
+   - compile-scan or generated script-provided layout
    - raw reset-all support
    - `F32` parameter support
 5. Call `par_init()` before runtime access.
@@ -19,11 +19,13 @@ This guide shows how to integrate the `Device Parameters` module into a firmware
 
 ## Required files
 
-### `par_table.def`
+### CSV schema and `par_table.def`
 
-`par_table.def` is the single source of truth for parameter definitions.
+`parameters/schema/par_table.csv` is the human-maintained source for bundled parameter definitions. Run `python3 parameters/tools/pargen.py` to regenerate the package-root `par_table.def` and files under `parameters/generated/`.
 
-Each row defines one parameter and is reused to build:
+`par_table.def` remains the generated compatibility input for the existing X-Macro implementation. Do not edit the generated `par_table.def` manually.
+
+Each generated row defines one parameter and is reused to build:
 
 - `par_num_t`
 - the parameter configuration table
@@ -65,7 +67,7 @@ PAR_ITEM_F32(
 )
 ```
 
-Use `template/par_table.deftmp` as the starting point. Keep `par_table.def` and `par_table.deftmp` synchronized when you extend the row signature or add new row types.
+Use `parameters/schema/par_table.csv` as the starting point. See [CSV parameter generator](csv-generator.md) for CSV fields, Python requirements, validation rules, generated layout files, and ID allocation. Keep `template/par_table.deftmp` synchronized only when you intentionally change the lower-level X-Macro row signature or add new row types.
 
 Object rows are also supported:
 
@@ -101,7 +103,7 @@ Object feature toggles:
 
 In the packaged RT-Thread Kconfig bridge, the matching package options are `AUTOGEN_PM_ENABLE_TYPE_STR`, `AUTOGEN_PM_ENABLE_TYPE_BYTES`, `AUTOGEN_PM_ENABLE_TYPE_ARR_U8`, `AUTOGEN_PM_ENABLE_TYPE_ARR_U16`, and `AUTOGEN_PM_ENABLE_TYPE_ARR_U32`, gated by `AUTOGEN_PM_ENABLE_TYPE_OBJECT`. Object payload display in `par get <id>` is controlled separately by `AUTOGEN_PM_MSH_CMD_GET_OBJECT` and is available only when `RT_USING_HEAP` is enabled, because it uses a temporary heap buffer.
 
-The bundled `par_table.def` keeps object rows as optional examples guarded by the matching `PAR_CFG_ENABLE_TYPE_*` switch, so disabling an object type compiles that bundled sample row out.
+The bundled CSV uses the `condition` column to keep object rows as optional examples guarded by the matching `PAR_CFG_ENABLE_TYPE_*` switch, so disabling an object type compiles that bundled sample row out.
 
 In production tables, keep that guard only for optional sample/demo rows. Unguarded production object rows are still rejected in `par_def.c` when their type is disabled.
 
@@ -164,7 +166,7 @@ Provide a generated static layout header only when:
 
 Use `template/par_layout_static.htmp` as the contract for the generated file.
 
-The template includes the scalar count macros and offset-table declaration. The object-specific fields are required only when object rows are compiled in.
+The template includes the scalar count macros, layout signature macro, and offset-table declaration. The object-specific fields are required only when object rows are compiled in.
 
 When object rows are present, the generated object-pool offsets are still checked at startup. They must stay contiguous and follow parameter-table order.
 
