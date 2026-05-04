@@ -188,7 +188,7 @@ PAR_ATOMIC_FETCH_TYPE_LIST(PAR_ATOMIC_DEFINE_FETCH_OR)
 
 #elif (PAR_ATOMIC_BACKEND == PAR_ATOMIC_BACKEND_PORT)
 
-#include "../../par_atomic_port.h"
+#include "par_atomic_port.h"
 
 #else
 

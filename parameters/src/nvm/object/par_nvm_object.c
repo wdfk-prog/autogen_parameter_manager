@@ -7,17 +7,17 @@
  *
  * @copyright Copyright (c) 2026 Ziga Miklosic. Distributed under the MIT license.
  */
-#include "nvm/object/par_nvm_object.h"
+#include "par_nvm_object.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
 
 #include <stddef.h>
 #include <string.h>
 
-#include "object/par_object.h"
-#include "nvm/object/store/par_nvm_object_store.h"
-#include "nvm/fnv.h"
-#include "port/par_if.h"
+#include "par_object.h"
+#include "par_nvm_object_store.h"
+#include "fnv.h"
+#include "par_if.h"
 
 /**
  * @brief Object persistence block signature.
@@ -112,8 +112,8 @@ static const par_num_t g_par_object_persist_slot_to_par_num[PAR_OBJECT_PERSIST_S
 #define PAR_ITEM_F32                     PAR_ITEM_NOP
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_OBJECT_PERSIST_SLOT
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../../detail/par_object_item_bind.inc"
-#include "../../../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -121,7 +121,7 @@ static const par_num_t g_par_object_persist_slot_to_par_num[PAR_OBJECT_PERSIST_S
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 };

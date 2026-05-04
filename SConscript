@@ -22,15 +22,24 @@ if GetDepend('AUTOGEN_PM_USING_MSH_TOOL'):
 
 path = [
     cwd,
+    cwd + '/backend',
     cwd + '/port',
     cwd + '/parameters/include',
     cwd + '/parameters/src',
     cwd + '/parameters/src/def',
-    cwd + '/parameters/src/layout',
-    cwd + '/parameters/src/port',
-    cwd + '/parameters/src/object',
-    cwd + '/parameters/src/scalar',
     cwd + '/parameters/src/detail',
+    cwd + '/parameters/src/layout',
+    cwd + '/parameters/src/nvm',
+    cwd + '/parameters/src/nvm/backend',
+    cwd + '/parameters/src/nvm/object',
+    cwd + '/parameters/src/nvm/object/addr',
+    cwd + '/parameters/src/nvm/object/store',
+    cwd + '/parameters/src/nvm/scalar',
+    cwd + '/parameters/src/nvm/scalar/layout',
+    cwd + '/parameters/src/nvm/scalar/store',
+    cwd + '/parameters/src/object',
+    cwd + '/parameters/src/port',
+    cwd + '/parameters/src/scalar',
     cwd + '/parameters/generated',
 ]
 
@@ -57,22 +66,11 @@ if GetDepend('AUTOGEN_PM_USING_NVM'):
     parameters/src/nvm/hash_32a.c
     ''')
 
-    path += [
-        cwd + '/parameters/src/nvm',
-        cwd + '/parameters/src/nvm/backend',
-    ]
-
     src += Split('''
     parameters/src/nvm/scalar/store/par_nvm_scalar_store.c
     ''')
 
     if GetDepend('AUTOGEN_PM_NVM_SCALAR'):
-        path += [
-            cwd + '/parameters/src/nvm/scalar',
-            cwd + '/parameters/src/nvm/scalar/layout',
-            cwd + '/parameters/src/nvm/scalar/store',
-        ]
-
         src += Split('''
         parameters/src/nvm/scalar/par_nvm_scalar.c
         ''')
@@ -103,12 +101,6 @@ if GetDepend('AUTOGEN_PM_USING_NVM'):
             ''')
 
     if GetDepend('AUTOGEN_PM_NVM_OBJECT'):
-        path += [
-            cwd + '/parameters/src/nvm/object',
-            cwd + '/parameters/src/nvm/object/store',
-            cwd + '/parameters/src/nvm/object/addr',
-        ]
-
         src += Split('''
         parameters/src/nvm/object/par_nvm_object.c
         parameters/src/nvm/object/store/par_nvm_object_store_shared.c
@@ -122,13 +114,11 @@ if GetDepend('AUTOGEN_PM_USING_NVM'):
         src += Split('''
         backend/par_store_backend_rtt_at24cxx.c
         ''')
-        path += [cwd + '/backend']
 
     if scalar_backend_needed and GetDepend('AUTOGEN_PM_USING_FLASH_EE_BACKEND'):
         src += Split('''
         parameters/src/nvm/backend/par_store_backend_flash_ee.c
         ''')
-        path += [cwd + '/backend']
 
         if GetDepend('AUTOGEN_PM_FLASH_EE_PORT_FAL'):
             src += Split('''

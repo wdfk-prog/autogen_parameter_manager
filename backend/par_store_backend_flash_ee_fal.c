@@ -13,7 +13,7 @@
  * 2026-04-14 1.0     wdfk-prog     first version
  */
 #include "par_cfg.h"
-#include "../parameters/src/nvm/backend/par_store_backend_flash_ee.h"
+#include "par_store_backend_flash_ee.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_BACKEND_FLASH_EE_EN) && (1 == PAR_CFG_NVM_BACKEND_FLASH_EE_PORT_FAL_EN)
 

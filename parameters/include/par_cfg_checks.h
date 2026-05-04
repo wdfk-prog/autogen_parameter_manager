@@ -9,7 +9,7 @@
 #define _PAR_CFG_CHECKS_H_
 
 #include "par_cfg_access.h"
-#include "def/par_def.h"
+#include "par_def.h"
 /**
  * @brief Configuration dependency checks for optional fields/features.
  */

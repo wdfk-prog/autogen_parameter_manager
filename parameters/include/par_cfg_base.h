@@ -44,7 +44,7 @@
  * @details Override NVM-related PAR_CFG_* macros from par_cfg_port.h before
  * this include, or keep the defaults provided by par_nvm_cfg.h.
  */
-#include "nvm/par_nvm_cfg.h"
+#include "par_nvm_cfg.h"
 
 /**
  * @brief Enable diagnostic logging in the parameter module.

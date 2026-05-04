@@ -26,6 +26,28 @@ INPUT                  = \
                          backend \
                          port
 
+INCLUDE_PATH           = \
+                         . \
+                         backend \
+                         port \
+                         parameters/include \
+                         parameters/src \
+                         parameters/src/def \
+                         parameters/src/detail \
+                         parameters/src/layout \
+                         parameters/src/nvm \
+                         parameters/src/nvm/backend \
+                         parameters/src/nvm/object \
+                         parameters/src/nvm/object/addr \
+                         parameters/src/nvm/object/store \
+                         parameters/src/nvm/scalar \
+                         parameters/src/nvm/scalar/layout \
+                         parameters/src/nvm/scalar/store \
+                         parameters/src/object \
+                         parameters/src/port \
+                         parameters/src/scalar \
+                         parameters/generated
+
 FILE_PATTERNS          = *.c \
                          *.h \
                          *.hpp \
@@ -96,3 +118,4 @@ QUIET                  = NO
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = NO
 WARN_IF_DOC_ERROR      = YES
+WARN_AS_ERROR          = YES

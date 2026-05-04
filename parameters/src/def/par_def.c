@@ -26,8 +26,8 @@
  * @brief Include dependencies.
  */
 #include "par.h"
-#include "def/par_def.h"
-#include "def/par_id_map_static.h"
+#include "par_def.h"
+#include "par_id_map_static.h"
 /**
  * @brief Compile-time definitions.
  */
@@ -158,7 +158,7 @@
 #define PAR_ITEM_ARR_U16 PAR_CHECK_ARR_U16
 #define PAR_ITEM_ARR_U32 PAR_CHECK_ARR_U32
 
-#include "../../par_table.def"
+#include "par_table.def"
 
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
@@ -215,8 +215,8 @@ static void par_compile_check_duplicate_ids(void)
 #define PAR_ITEM_F32                     PAR_CHECK_ID_DUPLICATE_CASE
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_CHECK_ID_DUPLICATE_CASE
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_CHECK_ID_DUPLICATE_CASE
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -224,7 +224,7 @@ static void par_compile_check_duplicate_ids(void)
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
     default:
@@ -257,8 +257,8 @@ static void par_compile_check_hash_bucket_collision(void)
 #define PAR_ITEM_F32                     PAR_CHECK_ID_BUCKET_CASE
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_CHECK_ID_BUCKET_CASE
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_CHECK_ID_BUCKET_CASE
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -266,7 +266,7 @@ static void par_compile_check_hash_bucket_collision(void)
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
     default:
@@ -465,13 +465,13 @@ PAR_STATIC_ASSERT(par_compile_check_hash_bucket_collision_ref, (sizeof(&par_comp
 #define PAR_OBJECT_ITEM_ARR_U16_HANDLER  PAR_INIT_ARR_U16
 #define PAR_OBJECT_ITEM_ARR_U32_HANDLER  PAR_INIT_ARR_U32
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../detail/par_object_item_bind_typed.inc"
+#include "par_object_item_bind_typed.inc"
 
 /**
  * @brief Compile-time parameter metadata table generated from par_table.def.
  */
 static const par_cfg_t g_par_table[ePAR_NUM_OF] = {
-#include "../../par_table.def"
+#include "par_table.def"
 };
 
 #undef PAR_ITEM_U8
@@ -481,7 +481,7 @@ static const par_cfg_t g_par_table[ePAR_NUM_OF] = {
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_STR_HANDLER
 #undef PAR_OBJECT_ITEM_BYTES_HANDLER
 #undef PAR_OBJECT_ITEM_ARR_U8_HANDLER
@@ -550,8 +550,8 @@ static const uint16_t g_par_id_table[ePAR_NUM_OF] = {
 #define PAR_ITEM_F32                     PAR_ITEM_ID_VALUE
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_ID_VALUE
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -559,7 +559,7 @@ static const uint16_t g_par_id_table[ePAR_NUM_OF] = {
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 #undef PAR_ITEM_NOP

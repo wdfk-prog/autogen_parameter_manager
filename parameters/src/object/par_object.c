@@ -7,14 +7,14 @@
  *
  * @copyright Copyright (c) 2026 Ziga Miklosic. Distributed under the MIT license.
  */
-#include "object/par_object.h"
+#include "par_object.h"
 
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
 
 #include <string.h>
 
-#include "layout/par_layout.h"
-#include "port/par_if.h"
+#include "par_layout.h"
+#include "par_if.h"
 
 /**
  * @brief Runtime descriptor for one fixed-capacity object parameter.

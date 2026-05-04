@@ -7,12 +7,12 @@
  *
  * @copyright Copyright (c) 2026 Ziga Miklosic. Distributed under the MIT license.
  */
-#include "nvm/scalar/store/par_nvm_scalar_store.h"
+#include "par_nvm_scalar_store.h"
 
 #if (1 == PAR_CFG_NVM_EN)
 
 #include "par_cfg.h"
-#include "port/par_if.h"
+#include "par_if.h"
 
 /**
  * @brief Bind or prepare the active parameter-storage backend.

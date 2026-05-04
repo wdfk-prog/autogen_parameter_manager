@@ -23,13 +23,13 @@
 #include <string.h>
 
 #include "par.h"
-#include "port/par_atomic.h"
-#include "layout/par_layout.h"
-#include "def/par_id_map_static.h"
-#include "object/par_object.h"
-#include "nvm/par_nvm.h"
-#include "port/par_if.h"
-#include "detail/par_core.h"
+#include "par_atomic.h"
+#include "par_layout.h"
+#include "par_id_map_static.h"
+#include "par_object.h"
+#include "par_nvm.h"
+#include "par_if.h"
+#include "par_core.h"
 /**
  * @brief Compile-time definitions.
  */

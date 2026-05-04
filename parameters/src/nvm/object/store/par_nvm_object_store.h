@@ -13,7 +13,7 @@
 #include <stdbool.h>
 
 #include "par.h"
-#include "nvm/backend/par_store_backend.h"
+#include "par_store_backend.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
 /**

@@ -10,10 +10,10 @@
 #include <string.h>
 
 #include "par.h"
-#include "detail/par_core.h"
-#include "object/par_object.h"
+#include "par_core.h"
+#include "par_object.h"
 #if (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED)
-#include "nvm/par_nvm.h"
+#include "par_nvm.h"
 #endif /* (1 == PAR_CFG_NVM_OBJECT_EN) && (1 == PAR_CFG_OBJECT_TYPES_ENABLED) */
 
 #if (1 == PAR_CFG_OBJECT_TYPES_ENABLED)

@@ -15,14 +15,14 @@
  * 2026-04-13 1.2     wdfk-prog     add layout-ops adapter
  * 2026-04-13 1.3     wdfk-prog     auto-generate compile-time fixed-payload-only address LUT
  */
-#include "nvm/scalar/layout/par_nvm_layout.h"
+#include "par_nvm_layout.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_PAYLOAD_ONLY)
 
 #include <stddef.h>
 #include <string.h>
 
-#include "nvm/par_nvm_table_id.h"
+#include "par_nvm_table_id.h"
 
 #define PAR_NVM_LAYOUT_RECORD_OVERHEAD ((uint32_t)PAR_NVM_RECORD_CRC_SIZE)
 #define PAR_NVM_LAYOUT_RECORD_MAX_SIZE (PAR_NVM_LAYOUT_RECORD_OVERHEAD + PAR_NVM_RECORD_DATA_SLOT_SIZE)
@@ -83,8 +83,8 @@ typedef struct
 #define PAR_ITEM_F32(...)                PAR_NVM_LAYOUT_FIXED_PAYLOAD_ONLY_PERSIST_SELECT(PAR_XARG_ENUM(__VA_ARGS__), PAR_XARG_PERS(__VA_ARGS__), PAR_NVM_LAYOUT_FIXED_PAYLOAD_ONLY_MEMBER_4)
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_NVM_LAYOUT_FIXED_PAYLOAD_ONLY_OBJECT_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_NVM_LAYOUT_FIXED_PAYLOAD_ONLY_OBJECT_NOP
-#include "../../../detail/par_object_item_bind.inc"
-#include "../../../../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -92,7 +92,7 @@ typedef struct
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../../../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 } par_nvm_layout_fixed_payload_only_offset_map_t;
@@ -115,8 +115,8 @@ static const uint32_t g_par_nvm_layout_fixed_payload_only_addr_lut[PAR_PERSIST_S
 #define PAR_ITEM_F32(...)                PAR_NVM_LAYOUT_FIXED_PAYLOAD_ONLY_ADDR_ENTRY_SELECT(PAR_XARG_ENUM(__VA_ARGS__), PAR_XARG_PERS(__VA_ARGS__))
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../../../detail/par_object_item_bind.inc"
-#include "../../../../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -124,7 +124,7 @@ static const uint32_t g_par_nvm_layout_fixed_payload_only_addr_lut[PAR_PERSIST_S
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../../../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 #undef PAR_ITEM_NOP

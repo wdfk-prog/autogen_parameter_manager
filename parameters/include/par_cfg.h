@@ -24,7 +24,7 @@
 
 #include "par_cfg_base.h"
 #include "par_cfg_features.h"
-#include "def/par_def.h"
+#include "par_def.h"
 #include "par_cfg_access.h"
 #include "par_cfg_checks.h"
 #include "par_cfg_table_api.h"

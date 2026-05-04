@@ -798,7 +798,7 @@ def generate_layout_h(rows: List[Row]) -> str:
     out.append("#define _PAR_LAYOUT_STATIC_H_\n\n")
     out.append("#include <stdint.h>\n")
     out.append("#include \"par_cfg.h\"\n")
-    out.append("#include \"def/par_def.h\"\n\n")
+    out.append("#include \"par_def.h\"\n\n")
     out.append("#ifdef __cplusplus\n")
     out.append("extern \"C\" {\n")
     out.append("#endif /* defined(__cplusplus) */\n\n")
@@ -1139,7 +1139,7 @@ def generate_info_c() -> str:
         + " * @brief Define generated parameter-table summary metadata.\n"
         + " */\n\n"
         + "#include \"par_generated_info.h\"\n"
-        + "#include \"def/par_id_map_static.h\"\n\n"
+        + "#include \"par_id_map_static.h\"\n\n"
         + "const par_generated_info_t g_par_generated_info = {\n"
         + "    .param_count = (uint16_t)ePAR_NUM_OF,\n"
         + "    .count8 = (uint16_t)PAR_LAYOUT_STATIC_COUNT8,\n"

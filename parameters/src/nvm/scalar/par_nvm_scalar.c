@@ -7,7 +7,7 @@
  *
  * @copyright Copyright (c) 2026 Ziga Miklosic. Distributed under the MIT license.
  */
-#include "nvm/scalar/layout/par_nvm_layout.h"
+#include "par_nvm_layout.h"
 
 #if (1 == PAR_CFG_NVM_EN)
 
@@ -15,7 +15,7 @@
 #include <string.h>
 
 #include "par_cfg.h"
-#include "port/par_if.h"
+#include "par_if.h"
 
 /**
  * @brief Resolve natural payload size from parameter type.

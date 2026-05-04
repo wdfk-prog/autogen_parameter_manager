@@ -57,9 +57,9 @@
 /**
  * @brief Include dependencies.
  */
-#include "nvm/par_nvm.h"
+#include "par_nvm.h"
 #include "par_cfg.h"
-#include "port/par_if.h"
+#include "par_if.h"
 
 #if (1 == PAR_CFG_NVM_EN)
 
@@ -67,13 +67,13 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "nvm/backend/par_store_backend.h"
-#include "nvm/scalar/layout/par_nvm_layout.h"
-#include "nvm/scalar/store/par_nvm_scalar_store.h"
-#include "nvm/par_nvm_table_id.h"
-#include "nvm/object/par_nvm_object.h"
-#include "nvm/object/store/par_nvm_object_store.h"
-#include "object/par_object.h"
+#include "par_store_backend.h"
+#include "par_nvm_layout.h"
+#include "par_nvm_scalar_store.h"
+#include "par_nvm_table_id.h"
+#include "par_nvm_object.h"
+#include "par_nvm_object_store.h"
+#include "par_object.h"
 /**
  * @brief Compile-time definitions.
  */
@@ -183,7 +183,7 @@ static const par_num_t g_par_persist_slot_to_par_num[PAR_PERSIST_SLOT_MAP_CAPACI
 #define PAR_ITEM_ARR_U8  PAR_ITEM_NOP
 #define PAR_ITEM_ARR_U16 PAR_ITEM_NOP
 #define PAR_ITEM_ARR_U32 PAR_ITEM_NOP
-#include "../../par_table.def"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32

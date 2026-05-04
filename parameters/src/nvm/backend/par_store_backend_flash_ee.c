@@ -23,13 +23,13 @@
  * Date       Version Author        Description
  * 2026-04-14 1.0     wdfk-prog     first version
  */
-#include "nvm/backend/par_store_backend_flash_ee.h"
+#include "par_store_backend_flash_ee.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_BACKEND_FLASH_EE_EN)
 
 #include <string.h>
 #include <stddef.h>
-#include "port/par_if.h"
+#include "par_if.h"
 
 
 #define PAR_STORE_FLASH_EE_BANK_COUNT       (2u)

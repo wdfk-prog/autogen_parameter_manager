@@ -11,10 +11,10 @@
 #include <string.h>
 
 #include "par.h"
-#include "port/par_atomic.h"
-#include "layout/par_layout.h"
-#include "object/par_object.h"
-#include "detail/par_core.h"
+#include "par_atomic.h"
+#include "par_layout.h"
+#include "par_object.h"
+#include "par_core.h"
 
 /**
  * @brief Compile-time definitions.
@@ -47,7 +47,7 @@ typedef struct
  * @brief Private implementation fragment. Do not include outside par_scalar_api.c.
  * @details Defines gs_par_storage with grouped typed initializers.
  */
-#include "detail/par_storage_init.inc"
+#include "par_storage_init.inc"
 
 #if (1 == PAR_CFG_ENABLE_RESET_ALL_RAW)
 /**
@@ -173,13 +173,13 @@ void par_core_scalar_snapshot_default_mirror(void)
  *
  * @note Private implementation fragment. Do not include outside par_scalar_api.c.
  */
-#include "detail/par_typed_impl.inc"
+#include "par_typed_impl.inc"
 
 /**
  * @brief Bitwise fast setter implementation.
  * @note Private implementation fragment. Do not include outside par_scalar_api.c.
  */
-#include "detail/par_bitwise_impl.inc"
+#include "par_bitwise_impl.inc"
 
 /**
  * @brief Set one scalar parameter value.

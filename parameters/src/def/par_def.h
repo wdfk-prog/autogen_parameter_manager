@@ -70,8 +70,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_ENUM
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_ENUM
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_ENUM
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -79,7 +79,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 #undef PAR_ITEM_NOP
@@ -112,8 +112,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_COUNT_ZERO
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_COUNT_ZERO
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_COUNT_ZERO
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -121,7 +121,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 };
@@ -138,8 +138,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_COUNT_ZERO
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_COUNT_ZERO
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_COUNT_ZERO
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -147,7 +147,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 };
@@ -164,8 +164,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_COUNT_ONE
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_COUNT_ZERO
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_COUNT_ZERO
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -173,7 +173,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 };
@@ -191,8 +191,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_COUNT_ZERO
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_COUNT_ONE
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_COUNT_ZERO
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -200,7 +200,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 };
@@ -256,8 +256,8 @@ enum
 #define PAR_OBJECT_ITEM_ARR_U16_HANDLER  PAR_OBJECT_BYTES_FIT_U16_ARR_U16
 #define PAR_OBJECT_ITEM_ARR_U32_HANDLER  PAR_OBJECT_BYTES_FIT_U16_ARR_U32
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_OBJECT_BYTES_FIT_U16_ZERO
-#include "../detail/par_object_item_bind_typed.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind_typed.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -265,7 +265,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_STR_HANDLER
 #undef PAR_OBJECT_ITEM_BYTES_HANDLER
 #undef PAR_OBJECT_ITEM_ARR_U8_HANDLER
@@ -297,8 +297,8 @@ enum
 #define PAR_OBJECT_ITEM_ARR_U16_HANDLER  PAR_ITEM_OBJECT_BYTES_ARR_U16
 #define PAR_OBJECT_ITEM_ARR_U32_HANDLER  PAR_ITEM_OBJECT_BYTES_ARR_U32
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_OBJECT_BYTES_ZERO
-#include "../detail/par_object_item_bind_typed.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind_typed.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -306,7 +306,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_STR_HANDLER
 #undef PAR_OBJECT_ITEM_BYTES_HANDLER
 #undef PAR_OBJECT_ITEM_ARR_U8_HANDLER
@@ -356,8 +356,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_PERSIST_ENUM
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -365,7 +365,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 #undef PAR_ITEM_NOP
@@ -403,8 +403,8 @@ enum
 #define PAR_ITEM_F32                     PAR_ITEM_NOP
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ITEM_OBJECT_PERSIST_ENUM
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -412,7 +412,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 #undef PAR_ITEM_NOP

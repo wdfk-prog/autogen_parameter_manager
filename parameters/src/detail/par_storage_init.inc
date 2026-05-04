@@ -51,7 +51,7 @@ static par_storage_groups_t gs_par_storage = {
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_STORAGE_OBJECT_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_STORAGE_OBJECT_NOP
 #include "par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -75,7 +75,7 @@ static par_storage_groups_t gs_par_storage = {
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_STORAGE_OBJECT_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_STORAGE_OBJECT_NOP
 #include "par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -103,7 +103,7 @@ static par_storage_groups_t gs_par_storage = {
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_STORAGE_OBJECT_NOP
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_STORAGE_OBJECT_NOP
 #include "par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32

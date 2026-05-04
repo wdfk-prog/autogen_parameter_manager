@@ -7,13 +7,13 @@
  *
  * @copyright Copyright (c) 2026 Ziga Miklosic. Distributed under the MIT license.
  */
-#include "nvm/object/par_nvm_object.h"
+#include "par_nvm_object.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (1 == PAR_CFG_NVM_OBJECT_EN) && \
     (1 == PAR_CFG_OBJECT_TYPES_ENABLED) && \
     (PAR_CFG_NVM_OBJECT_STORE_MODE == PAR_CFG_NVM_OBJECT_STORE_DEDICATED)
 
-#include "port/par_if.h"
+#include "par_if.h"
 
 /**
  * @brief Cached base address of the object persistence block.

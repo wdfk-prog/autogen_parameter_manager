@@ -13,13 +13,13 @@
  * 2026-04-06 1.0     wdfk-prog     first version
  * 2026-04-13 1.1     wdfk-prog     add layout-ops adapter
  */
-#include "nvm/scalar/layout/par_nvm_layout.h"
+#include "par_nvm_layout.h"
 
 #if (1 == PAR_CFG_NVM_EN) && (PAR_CFG_NVM_RECORD_LAYOUT == PAR_CFG_NVM_RECORD_LAYOUT_FIXED_SLOT_NO_SIZE)
 
 #include <string.h>
 
-#include "nvm/par_nvm_table_id.h"
+#include "par_nvm_table_id.h"
 
 #define PAR_NVM_LAYOUT_RECORD_SIZE (PAR_NVM_RECORD_ID_SIZE + PAR_NVM_RECORD_CRC_SIZE + (uint32_t)PAR_NVM_RECORD_DATA_SLOT_SIZE)
 

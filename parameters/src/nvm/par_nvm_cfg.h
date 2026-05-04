@@ -85,7 +85,7 @@
 #define PAR_CFG_TABLE_ID_SCHEMA_VER (1U)
 #endif /* !defined(PAR_CFG_TABLE_ID_SCHEMA_VER) */
 
-#include "nvm/backend/par_store_backend_flash_ee_cfg.h"
+#include "par_store_backend_flash_ee_cfg.h"
 
 /**
  * @brief Enable/Disable write-path readback verification for persisted data.

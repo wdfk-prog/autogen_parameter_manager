@@ -21,7 +21,7 @@
 #include <stdint.h>
 
 #include "par_cfg.h"
-#include "def/par_def.h"
+#include "par_def.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -130,8 +130,8 @@ enum
 #define PAR_OBJECT_ITEM_ARR_U16_HANDLER  PAR_LAYOUT_SIGNATURE_A_ARR_U16
 #define PAR_OBJECT_ITEM_ARR_U32_HANDLER  PAR_LAYOUT_SIGNATURE_A_ARR_U32
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_LAYOUT_SIGNATURE_ZERO
-#include "../detail/par_object_item_bind_typed.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind_typed.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -139,7 +139,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_STR_HANDLER
 #undef PAR_OBJECT_ITEM_BYTES_HANDLER
 #undef PAR_OBJECT_ITEM_ARR_U8_HANDLER
@@ -163,8 +163,8 @@ enum
 #define PAR_OBJECT_ITEM_ARR_U16_HANDLER  PAR_LAYOUT_SIGNATURE_B_ARR_U16
 #define PAR_OBJECT_ITEM_ARR_U32_HANDLER  PAR_LAYOUT_SIGNATURE_B_ARR_U32
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_LAYOUT_SIGNATURE_ZERO
-#include "../detail/par_object_item_bind_typed.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind_typed.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -172,7 +172,7 @@ enum
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_STR_HANDLER
 #undef PAR_OBJECT_ITEM_BYTES_HANDLER
 #undef PAR_OBJECT_ITEM_ARR_U8_HANDLER

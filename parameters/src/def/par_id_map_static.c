@@ -12,7 +12,7 @@
  * Date       Version Author        Description
  * 2026-03-24 1.0     wdfk-prog    first version
  */
-#include "def/par_id_map_static.h"
+#include "par_id_map_static.h"
 
 #if (1 == PAR_CFG_ENABLE_ID)
 
@@ -37,8 +37,8 @@ const par_id_map_entry_t g_par_id_map_static[PAR_ID_HASH_SIZE] = {
 #define PAR_ITEM_F32                     PAR_ID_MAP_ITEM
 #define PAR_OBJECT_ITEM_ENABLED_HANDLER  PAR_ID_MAP_ITEM
 #define PAR_OBJECT_ITEM_DISABLED_HANDLER PAR_ITEM_NOP
-#include "../detail/par_object_item_bind.inc"
-#include "../../par_table.def"
+#include "par_object_item_bind.inc"
+#include "par_table.def"
 #undef PAR_ITEM_U8
 #undef PAR_ITEM_U16
 #undef PAR_ITEM_U32
@@ -46,7 +46,7 @@ const par_id_map_entry_t g_par_id_map_static[PAR_ID_HASH_SIZE] = {
 #undef PAR_ITEM_I16
 #undef PAR_ITEM_I32
 #undef PAR_ITEM_F32
-#include "../detail/par_object_item_unbind.inc"
+#include "par_object_item_unbind.inc"
 #undef PAR_OBJECT_ITEM_ENABLED_HANDLER
 #undef PAR_OBJECT_ITEM_DISABLED_HANDLER
 #undef PAR_ITEM_NOP

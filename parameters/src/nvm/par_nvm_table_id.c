@@ -14,9 +14,9 @@
  * 2026-04-11 1.1     wdfk-prog     add stored-prefix table-ID calculation
  */
 #include "par.h"
-#include "nvm/fnv.h"
-#include "nvm/par_nvm_table_id.h"
-#include "object/par_object.h"
+#include "fnv.h"
+#include "par_nvm_table_id.h"
+#include "par_object.h"
 
 /**
  * @brief Update FNV-1a context with one platform-native scalar image.

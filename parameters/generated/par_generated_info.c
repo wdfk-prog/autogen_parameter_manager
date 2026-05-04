@@ -8,7 +8,7 @@
  */
 
 #include "par_generated_info.h"
-#include "def/par_id_map_static.h"
+#include "par_id_map_static.h"
 
 const par_generated_info_t g_par_generated_info = {
     .param_count = (uint16_t)ePAR_NUM_OF,
